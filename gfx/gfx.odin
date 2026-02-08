@@ -2103,6 +2103,9 @@ foreign sokol_gfx_clib {
     query_image_pixelformat :: proc(img: Image) -> Pixel_Format ---
     query_image_usage :: proc(img: Image) -> Image_Usage ---
     query_image_sample_count :: proc(img: Image) -> c.int ---
+    query_image_pixels :: proc(img: Image, pixels: rawptr, #any_int size: c.int) ---
+    query_pixels :: proc(#any_int x: c.int, #any_int y: c.int, #any_int w: c.int, #any_int h: c.int, origin_top_left: bool, pixels: rawptr, #any_int size: c.int) ---
+    update_texture_filter :: proc(img: Image, min_filter: Filter, mag_filter: Filter) ---
     query_view_type :: proc(view: View) -> View_Type ---
     query_view_image :: proc(view: View) -> Image ---
     query_view_buffer :: proc(view: View) -> Buffer ---
@@ -5259,4 +5262,3 @@ Gl_View_Info :: struct {
     msaa_render_buffer : u32,
     msaa_resolve_frame_buffer : u32,
 }
-
