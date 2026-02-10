@@ -1339,66 +1339,50 @@ USE_DLL :: #config(SOKOL_DLL, false)
 when ODIN_OS == .Windows {
     when USE_DLL {
         when USE_GL {
-            when DEBUG { foreign import sokol_app_clib { "../sokol_dll_windows_x64_gl_debug.lib" } }
-            else       { foreign import sokol_app_clib { "../sokol_dll_windows_x64_gl_release.lib" } }
+            when DEBUG { foreign import sokol_app_clib "../sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_app_clib "../sokol_dll_windows_x64_gl_release.lib" }
         } else {
-            when DEBUG { foreign import sokol_app_clib { "../sokol_dll_windows_x64_d3d11_debug.lib" } }
-            else       { foreign import sokol_app_clib { "../sokol_dll_windows_x64_d3d11_release.lib" } }
+            when DEBUG { foreign import sokol_app_clib "../sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_app_clib "../sokol_dll_windows_x64_d3d11_release.lib" }
         }
     } else {
         when USE_GL {
-            when DEBUG { foreign import sokol_app_clib { "sokol_app_windows_x64_gl_debug.lib" } }
-            else       { foreign import sokol_app_clib { "sokol_app_windows_x64_gl_release.lib" } }
+            when DEBUG { foreign import sokol_app_clib "sokol_app_windows_x64_gl_debug.lib" } else { foreign import sokol_app_clib "sokol_app_windows_x64_gl_release.lib" }
         } else {
-            when DEBUG { foreign import sokol_app_clib { "sokol_app_windows_x64_d3d11_debug.lib" } }
-            else       { foreign import sokol_app_clib { "sokol_app_windows_x64_d3d11_release.lib" } }
+            when DEBUG { foreign import sokol_app_clib "sokol_app_windows_x64_d3d11_debug.lib" } else { foreign import sokol_app_clib "sokol_app_windows_x64_d3d11_release.lib" }
         }
     }
 } else when ODIN_OS == .Darwin {
     when USE_DLL {
-             when  USE_GL && ODIN_ARCH == .arm64 &&  DEBUG { foreign import sokol_app_clib { "../dylib/sokol_dylib_macos_arm64_gl_debug.dylib" } }
-        else when  USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_app_clib { "../dylib/sokol_dylib_macos_arm64_gl_release.dylib" } }
-        else when  USE_GL && ODIN_ARCH == .amd64 &&  DEBUG { foreign import sokol_app_clib { "../dylib/sokol_dylib_macos_x64_gl_debug.dylib" } }
-        else when  USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_app_clib { "../dylib/sokol_dylib_macos_x64_gl_release.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .arm64 &&  DEBUG { foreign import sokol_app_clib { "../dylib/sokol_dylib_macos_arm64_metal_debug.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_app_clib { "../dylib/sokol_dylib_macos_arm64_metal_release.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .amd64 &&  DEBUG { foreign import sokol_app_clib { "../dylib/sokol_dylib_macos_x64_metal_debug.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_app_clib { "../dylib/sokol_dylib_macos_x64_metal_release.dylib" } }
+        when USE_GL && ODIN_ARCH ==
+            .arm64 && DEBUG { foreign import sokol_app_clib "../dylib/sokol_dylib_macos_arm64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_app_clib "../dylib/sokol_dylib_macos_arm64_gl_release.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_app_clib "../dylib/sokol_dylib_macos_x64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_app_clib "../dylib/sokol_dylib_macos_x64_gl_release.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && DEBUG { foreign import sokol_app_clib "../dylib/sokol_dylib_macos_arm64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_app_clib "../dylib/sokol_dylib_macos_arm64_metal_release.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_app_clib "../dylib/sokol_dylib_macos_x64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_app_clib "../dylib/sokol_dylib_macos_x64_metal_release.dylib" }
     } else {
         when USE_GL {
             when ODIN_ARCH == .arm64 {
-                when DEBUG { foreign import sokol_app_clib { "sokol_app_macos_arm64_gl_debug.a", "system:Cocoa.framework","system:QuartzCore.framework","system:OpenGL.framework" } }
-                else       { foreign import sokol_app_clib { "sokol_app_macos_arm64_gl_release.a", "system:Cocoa.framework","system:QuartzCore.framework","system:OpenGL.framework" } }
+                when DEBUG { foreign import sokol_app_clib {"sokol_app_macos_arm64_gl_debug.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:OpenGL.framework"} } else { foreign import sokol_app_clib {"sokol_app_macos_arm64_gl_release.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:OpenGL.framework"} }
             } else {
-                when DEBUG { foreign import sokol_app_clib { "sokol_app_macos_x64_gl_debug.a", "system:Cocoa.framework","system:QuartzCore.framework","system:OpenGL.framework" } }
-                else       { foreign import sokol_app_clib { "sokol_app_macos_x64_gl_release.a", "system:Cocoa.framework","system:QuartzCore.framework","system:OpenGL.framework" } }
+                when DEBUG { foreign import sokol_app_clib {"sokol_app_macos_x64_gl_debug.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:OpenGL.framework"} } else { foreign import sokol_app_clib {"sokol_app_macos_x64_gl_release.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:OpenGL.framework"} }
             }
         } else {
             when ODIN_ARCH == .arm64 {
-                when DEBUG { foreign import sokol_app_clib { "sokol_app_macos_arm64_metal_debug.a", "system:Cocoa.framework","system:QuartzCore.framework","system:Metal.framework","system:MetalKit.framework" } }
-                else       { foreign import sokol_app_clib { "sokol_app_macos_arm64_metal_release.a", "system:Cocoa.framework","system:QuartzCore.framework","system:Metal.framework","system:MetalKit.framework" } }
+                when DEBUG { foreign import sokol_app_clib {"sokol_app_macos_arm64_metal_debug.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:Metal.framework", "system:MetalKit.framework"} } else { foreign import sokol_app_clib {"sokol_app_macos_arm64_metal_release.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:Metal.framework", "system:MetalKit.framework"} }
             } else {
-                when DEBUG { foreign import sokol_app_clib { "sokol_app_macos_x64_metal_debug.a", "system:Cocoa.framework","system:QuartzCore.framework","system:Metal.framework","system:MetalKit.framework" } }
-                else       { foreign import sokol_app_clib { "sokol_app_macos_x64_metal_release.a", "system:Cocoa.framework","system:QuartzCore.framework","system:Metal.framework","system:MetalKit.framework" } }
+                when DEBUG { foreign import sokol_app_clib {"sokol_app_macos_x64_metal_debug.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:Metal.framework", "system:MetalKit.framework"} } else { foreign import sokol_app_clib {"sokol_app_macos_x64_metal_release.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:Metal.framework", "system:MetalKit.framework"} }
             }
         }
     }
 } else when ODIN_OS == .Linux {
     when USE_DLL {
-        when DEBUG { foreign import sokol_app_clib { "sokol_app_linux_x64_gl_debug.so", "system:X11", "system:Xi", "system:Xcursor", "system:GL", "system:dl", "system:pthread" } }
-        else       { foreign import sokol_app_clib { "sokol_app_linux_x64_gl_release.so", "system:X11", "system:Xi", "system:Xcursor", "system:GL", "system:dl", "system:pthread" } }
+        when DEBUG { foreign import sokol_app_clib {"sokol_app_linux_x64_gl_debug.so", "system:X11", "system:Xi", "system:Xcursor", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_app_clib {"sokol_app_linux_x64_gl_release.so", "system:X11", "system:Xi", "system:Xcursor", "system:GL", "system:dl", "system:pthread"} }
     } else {
-        when DEBUG { foreign import sokol_app_clib { "sokol_app_linux_x64_gl_debug.a", "system:X11", "system:Xi", "system:Xcursor", "system:GL", "system:dl", "system:pthread" } }
-        else       { foreign import sokol_app_clib { "sokol_app_linux_x64_gl_release.a", "system:X11", "system:Xi", "system:Xcursor", "system:GL", "system:dl", "system:pthread" } }
+        when DEBUG { foreign import sokol_app_clib {"sokol_app_linux_x64_gl_debug.a", "system:X11", "system:Xi", "system:Xcursor", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_app_clib {"sokol_app_linux_x64_gl_release.a", "system:X11", "system:Xi", "system:Xcursor", "system:GL", "system:dl", "system:pthread"} }
     }
 } else when ODIN_ARCH == .wasm32 || ODIN_ARCH == .wasm64p32 {
     // Feed sokol_app_wasm_gl_debug.a or sokol_app_wasm_gl_release.a into emscripten compiler.
-    foreign import sokol_app_clib { "env.o" }
+    foreign import sokol_app_clib "env.o"
 } else {
     #panic("This OS is currently not supported")
 }
 
-@(default_calling_convention="c", link_prefix="sapp_")
+@(default_calling_convention = "c", link_prefix = "sapp_")
 foreign sokol_app_clib {
     // returns true after sokol-app has been initialized
     isvalid :: proc() -> bool ---
@@ -1421,59 +1405,59 @@ foreign sokol_app_clib {
     // returns the dpi scaling factor (window pixels to framebuffer pixels)
     dpi_scale :: proc() -> f32 ---
     // show or hide the mobile device onscreen keyboard
-    show_keyboard :: proc(show: bool)  ---
+    show_keyboard :: proc(show: bool) ---
     // return true if the mobile device onscreen keyboard is currently shown
     keyboard_shown :: proc() -> bool ---
     // query fullscreen mode
     is_fullscreen :: proc() -> bool ---
     // toggle fullscreen mode
-    toggle_fullscreen :: proc()  ---
+    toggle_fullscreen :: proc() ---
     // show or hide the mouse cursor
-    show_mouse :: proc(show: bool)  ---
+    show_mouse :: proc(show: bool) ---
     // show or hide the mouse cursor
     mouse_shown :: proc() -> bool ---
     // enable/disable mouse-pointer-lock mode
-    lock_mouse :: proc(lock: bool)  ---
+    lock_mouse :: proc(lock: bool) ---
     // return true if in mouse-pointer-lock mode (this may toggle a few frames later)
     mouse_locked :: proc() -> bool ---
     // set mouse cursor type
-    set_mouse_cursor :: proc(cursor: Mouse_Cursor)  ---
+    set_mouse_cursor :: proc(cursor: Mouse_Cursor) ---
     // get current mouse cursor type
     get_mouse_cursor :: proc() -> Mouse_Cursor ---
     // associate a custom mouse cursor image to a sapp_mouse_cursor enum entry
     bind_mouse_cursor_image :: proc(cursor: Mouse_Cursor, #by_ptr desc: Image_Desc) -> Mouse_Cursor ---
     // restore the sapp_mouse_cursor enum entry to it's default system appearance
-    unbind_mouse_cursor_image :: proc(cursor: Mouse_Cursor)  ---
+    unbind_mouse_cursor_image :: proc(cursor: Mouse_Cursor) ---
     // return the userdata pointer optionally provided in sapp_desc
     userdata :: proc() -> rawptr ---
     // return a copy of the sapp_desc structure
     query_desc :: proc() -> Desc ---
     // initiate a "soft quit" (sends SAPP_EVENTTYPE_QUIT_REQUESTED)
-    request_quit :: proc()  ---
+    request_quit :: proc() ---
     // cancel a pending quit (when SAPP_EVENTTYPE_QUIT_REQUESTED has been received)
-    cancel_quit :: proc()  ---
+    cancel_quit :: proc() ---
     // initiate a "hard quit" (quit application without sending SAPP_EVENTTYPE_QUIT_REQUESTED)
-    quit :: proc()  ---
+    quit :: proc() ---
     // call from inside event callback to consume the current event (don't forward to platform)
-    consume_event :: proc()  ---
+    consume_event :: proc() ---
     // get the current frame counter (for comparison with sapp_event.frame_count)
     frame_count :: proc() -> u64 ---
     // get an averaged/smoothed frame duration in seconds
     frame_duration :: proc() -> f64 ---
     // write string into clipboard
-    set_clipboard_string :: proc(str: cstring)  ---
+    set_clipboard_string :: proc(str: cstring) ---
     // read string from clipboard (usually during SAPP_EVENTTYPE_CLIPBOARD_PASTED)
     get_clipboard_string :: proc() -> cstring ---
     // set the window title (only on desktop platforms)
-    set_window_title :: proc(str: cstring)  ---
+    set_window_title :: proc(str: cstring) ---
     // set the window icon (only on Windows and Linux)
-    set_icon :: proc(#by_ptr icon_desc: Icon_Desc)  ---
+    set_icon :: proc(#by_ptr icon_desc: Icon_Desc) ---
     // gets the total number of dropped files (after an SAPP_EVENTTYPE_FILES_DROPPED event)
     get_num_dropped_files :: proc() -> c.int ---
     // gets the dropped file paths
     get_dropped_file_path :: proc(#any_int index: c.int) -> cstring ---
     // special run-function for SOKOL_NO_ENTRY (in standard mode this is an empty stub)
-    run :: proc(#by_ptr desc: Desc)  ---
+    run :: proc(#by_ptr desc: Desc) ---
     // get runtime environment information
     get_environment :: proc() -> Environment ---
     // get current frame's swapchain information (call once per frame!)
@@ -1483,11 +1467,11 @@ foreign sokol_app_clib {
     // EGL: get EGLContext object
     egl_get_context :: proc() -> rawptr ---
     // HTML5: enable or disable the hardwired "Leave Site?" dialog box
-    html5_ask_leave_site :: proc(ask: bool)  ---
+    html5_ask_leave_site :: proc(ask: bool) ---
     // HTML5: get byte size of a dropped file
     html5_get_dropped_file_size :: proc(#any_int index: c.int) -> u32 ---
     // HTML5: asynchronously load the content of a dropped file
-    html5_fetch_dropped_file :: proc(#by_ptr request: Html5_Fetch_Request)  ---
+    html5_fetch_dropped_file :: proc(#by_ptr request: Html5_Fetch_Request) ---
     // macOS: get bridged pointer to macOS NSWindow
     macos_get_window :: proc() -> rawptr ---
     // iOS: get bridged pointer to iOS UIWindow
@@ -1560,127 +1544,127 @@ Event_Type :: enum i32 {
     Note that the keycode values are identical with GLFW.
 */
 Keycode :: enum i32 {
-    INVALID = 0,
-    SPACE = 32,
-    APOSTROPHE = 39,
-    COMMA = 44,
-    MINUS = 45,
-    PERIOD = 46,
-    SLASH = 47,
-    _0 = 48,
-    _1 = 49,
-    _2 = 50,
-    _3 = 51,
-    _4 = 52,
-    _5 = 53,
-    _6 = 54,
-    _7 = 55,
-    _8 = 56,
-    _9 = 57,
-    SEMICOLON = 59,
-    EQUAL = 61,
-    A = 65,
-    B = 66,
-    C = 67,
-    D = 68,
-    E = 69,
-    F = 70,
-    G = 71,
-    H = 72,
-    I = 73,
-    J = 74,
-    K = 75,
-    L = 76,
-    M = 77,
-    N = 78,
-    O = 79,
-    P = 80,
-    Q = 81,
-    R = 82,
-    S = 83,
-    T = 84,
-    U = 85,
-    V = 86,
-    W = 87,
-    X = 88,
-    Y = 89,
-    Z = 90,
-    LEFT_BRACKET = 91,
-    BACKSLASH = 92,
+    INVALID       = 0,
+    SPACE         = 32,
+    APOSTROPHE    = 39,
+    COMMA         = 44,
+    MINUS         = 45,
+    PERIOD        = 46,
+    SLASH         = 47,
+    _0            = 48,
+    _1            = 49,
+    _2            = 50,
+    _3            = 51,
+    _4            = 52,
+    _5            = 53,
+    _6            = 54,
+    _7            = 55,
+    _8            = 56,
+    _9            = 57,
+    SEMICOLON     = 59,
+    EQUAL         = 61,
+    A             = 65,
+    B             = 66,
+    C             = 67,
+    D             = 68,
+    E             = 69,
+    F             = 70,
+    G             = 71,
+    H             = 72,
+    I             = 73,
+    J             = 74,
+    K             = 75,
+    L             = 76,
+    M             = 77,
+    N             = 78,
+    O             = 79,
+    P             = 80,
+    Q             = 81,
+    R             = 82,
+    S             = 83,
+    T             = 84,
+    U             = 85,
+    V             = 86,
+    W             = 87,
+    X             = 88,
+    Y             = 89,
+    Z             = 90,
+    LEFT_BRACKET  = 91,
+    BACKSLASH     = 92,
     RIGHT_BRACKET = 93,
-    GRAVE_ACCENT = 96,
-    WORLD_1 = 161,
-    WORLD_2 = 162,
-    ESCAPE = 256,
-    ENTER = 257,
-    TAB = 258,
-    BACKSPACE = 259,
-    INSERT = 260,
-    DELETE = 261,
-    RIGHT = 262,
-    LEFT = 263,
-    DOWN = 264,
-    UP = 265,
-    PAGE_UP = 266,
-    PAGE_DOWN = 267,
-    HOME = 268,
-    END = 269,
-    CAPS_LOCK = 280,
-    SCROLL_LOCK = 281,
-    NUM_LOCK = 282,
-    PRINT_SCREEN = 283,
-    PAUSE = 284,
-    F1 = 290,
-    F2 = 291,
-    F3 = 292,
-    F4 = 293,
-    F5 = 294,
-    F6 = 295,
-    F7 = 296,
-    F8 = 297,
-    F9 = 298,
-    F10 = 299,
-    F11 = 300,
-    F12 = 301,
-    F13 = 302,
-    F14 = 303,
-    F15 = 304,
-    F16 = 305,
-    F17 = 306,
-    F18 = 307,
-    F19 = 308,
-    F20 = 309,
-    F21 = 310,
-    F22 = 311,
-    F23 = 312,
-    F24 = 313,
-    F25 = 314,
-    KP_0 = 320,
-    KP_1 = 321,
-    KP_2 = 322,
-    KP_3 = 323,
-    KP_4 = 324,
-    KP_5 = 325,
-    KP_6 = 326,
-    KP_7 = 327,
-    KP_8 = 328,
-    KP_9 = 329,
-    KP_DECIMAL = 330,
-    KP_DIVIDE = 331,
-    KP_MULTIPLY = 332,
-    KP_SUBTRACT = 333,
-    KP_ADD = 334,
-    KP_ENTER = 335,
-    KP_EQUAL = 336,
-    LEFT_SHIFT = 340,
-    LEFT_CONTROL = 341,
-    LEFT_ALT = 342,
-    LEFT_SUPER = 343,
-    RIGHT_SHIFT = 344,
+    GRAVE_ACCENT  = 96,
+    WORLD_1       = 161,
+    WORLD_2       = 162,
+    ESCAPE        = 256,
+    ENTER         = 257,
+    TAB           = 258,
+    BACKSPACE     = 259,
+    INSERT        = 260,
+    DELETE        = 261,
+    RIGHT         = 262,
+    LEFT          = 263,
+    DOWN          = 264,
+    UP            = 265,
+    PAGE_UP       = 266,
+    PAGE_DOWN     = 267,
+    HOME          = 268,
+    END           = 269,
+    CAPS_LOCK     = 280,
+    SCROLL_LOCK   = 281,
+    NUM_LOCK      = 282,
+    PRINT_SCREEN  = 283,
+    PAUSE         = 284,
+    F1            = 290,
+    F2            = 291,
+    F3            = 292,
+    F4            = 293,
+    F5            = 294,
+    F6            = 295,
+    F7            = 296,
+    F8            = 297,
+    F9            = 298,
+    F10           = 299,
+    F11           = 300,
+    F12           = 301,
+    F13           = 302,
+    F14           = 303,
+    F15           = 304,
+    F16           = 305,
+    F17           = 306,
+    F18           = 307,
+    F19           = 308,
+    F20           = 309,
+    F21           = 310,
+    F22           = 311,
+    F23           = 312,
+    F24           = 313,
+    F25           = 314,
+    KP_0          = 320,
+    KP_1          = 321,
+    KP_2          = 322,
+    KP_3          = 323,
+    KP_4          = 324,
+    KP_5          = 325,
+    KP_6          = 326,
+    KP_7          = 327,
+    KP_8          = 328,
+    KP_9          = 329,
+    KP_DECIMAL    = 330,
+    KP_DIVIDE     = 331,
+    KP_MULTIPLY   = 332,
+    KP_SUBTRACT   = 333,
+    KP_ADD        = 334,
+    KP_ENTER      = 335,
+    KP_EQUAL      = 336,
+    LEFT_SHIFT    = 340,
+    LEFT_CONTROL  = 341,
+    LEFT_ALT      = 342,
+    LEFT_SUPER    = 343,
+    RIGHT_SHIFT   = 344,
     RIGHT_CONTROL = 345,
-    RIGHT_ALT = 346,
-    RIGHT_SUPER = 347,
-    MENU = 348,
+    RIGHT_ALT     = 346,
+    RIGHT_SUPER   = 347,
+    MENU          = 348,
 }
 
 /*
@@ -1695,9 +1679,9 @@ Keycode :: enum i32 {
 */
 Android_Tooltype :: enum i32 {
     UNKNOWN = 0,
-    FINGER = 1,
-    STYLUS = 2,
-    MOUSE = 3,
+    FINGER  = 1,
+    STYLUS  = 2,
+    MOUSE   = 3,
 }
 
 /*
@@ -1710,11 +1694,11 @@ Android_Tooltype :: enum i32 {
     and the number of touches is stored in sapp_event.num_touches.
 */
 Touchpoint :: struct {
-    identifier : c.uintptr_t,
-    pos_x : f32,
-    pos_y : f32,
-    android_tooltype : Android_Tooltype,
-    changed : bool,
+    identifier:       c.uintptr_t,
+    pos_x:            f32,
+    pos_y:            f32,
+    android_tooltype: Android_Tooltype,
+    changed:          bool,
 }
 
 /*
@@ -1724,9 +1708,9 @@ Touchpoint :: struct {
     and MOUSE_UP, stored in the struct field sapp_event.mouse_button.
 */
 Mousebutton :: enum i32 {
-    LEFT = 0,
-    RIGHT = 1,
-    MIDDLE = 2,
+    LEFT    = 0,
+    RIGHT   = 1,
+    MIDDLE  = 2,
     INVALID = 256,
 }
 
@@ -1752,25 +1736,25 @@ MODIFIER_MMB :: 1024
     fields.
 */
 Event :: struct {
-    frame_count : u64,
-    type : Event_Type,
-    key_code : Keycode,
-    char_code : u32,
-    key_repeat : bool,
-    modifiers : u32,
-    mouse_button : Mousebutton,
-    mouse_x : f32,
-    mouse_y : f32,
-    mouse_dx : f32,
-    mouse_dy : f32,
-    scroll_x : f32,
-    scroll_y : f32,
-    num_touches : c.int,
-    touches : [8]Touchpoint,
-    window_width : c.int,
-    window_height : c.int,
-    framebuffer_width : c.int,
-    framebuffer_height : c.int,
+    frame_count:        u64,
+    type:               Event_Type,
+    key_code:           Keycode,
+    char_code:          u32,
+    key_repeat:         bool,
+    modifiers:          u32,
+    mouse_button:       Mousebutton,
+    mouse_x:            f32,
+    mouse_y:            f32,
+    mouse_dx:           f32,
+    mouse_dy:           f32,
+    scroll_x:           f32,
+    scroll_y:           f32,
+    num_touches:        c.int,
+    touches:            [8]Touchpoint,
+    window_width:       c.int,
+    window_height:      c.int,
+    framebuffer_width:  c.int,
+    framebuffer_height: c.int,
 }
 
 /*
@@ -1780,8 +1764,8 @@ Event :: struct {
     into sokol_app.h.
 */
 Range :: struct {
-    ptr : rawptr,
-    size : c.size_t,
+    ptr:  rawptr,
+    size: c.size_t,
 }
 
 /*
@@ -1795,11 +1779,11 @@ Range :: struct {
     of the image should be aligned with the mouse position.
 */
 Image_Desc :: struct {
-    width : c.int,
-    height : c.int,
-    cursor_hotspot_x : c.int,
-    cursor_hotspot_y : c.int,
-    pixels : Range,
+    width:            c.int,
+    height:           c.int,
+    cursor_hotspot_x: c.int,
+    cursor_hotspot_y: c.int,
+    pixels:           Range,
 }
 
 /*
@@ -1821,8 +1805,8 @@ Image_Desc :: struct {
     will be ignored and the sokol_app.h default icon will be set.
 */
 Icon_Desc :: struct {
-    sokol_default : bool,
-    images : [8]Image_Desc,
+    sokol_default: bool,
+    images:        [8]Image_Desc,
 }
 
 /*
@@ -1834,9 +1818,9 @@ Icon_Desc :: struct {
     override one function but not the other).
 */
 Allocator :: struct {
-    alloc_fn : proc "c" (a0: c.size_t, a1: rawptr) -> rawptr,
-    free_fn : proc "c" (a0: rawptr, a1: rawptr),
-    user_data : rawptr,
+    alloc_fn:  proc "c" (a0: c.size_t, a1: rawptr) -> rawptr,
+    free_fn:   proc "c" (a0: rawptr, a1: rawptr),
+    user_data: rawptr,
 }
 
 Log_Item :: enum i32 {
@@ -1996,37 +1980,37 @@ Pixel_Format :: enum i32 {
     from sapp_environment!
 */
 Environment_Defaults :: struct {
-    color_format : Pixel_Format,
-    depth_format : Pixel_Format,
-    sample_count : c.int,
+    color_format: Pixel_Format,
+    depth_format: Pixel_Format,
+    sample_count: c.int,
 }
 
 Metal_Environment :: struct {
-    device : rawptr,
+    device: rawptr,
 }
 
 D3d11_Environment :: struct {
-    device : rawptr,
-    device_context : rawptr,
+    device:         rawptr,
+    device_context: rawptr,
 }
 
 Wgpu_Environment :: struct {
-    device : rawptr,
+    device: rawptr,
 }
 
 Vulkan_Environment :: struct {
-    physical_device : rawptr,
-    device : rawptr,
-    queue : rawptr,
-    queue_family_index : u32,
+    physical_device:    rawptr,
+    device:             rawptr,
+    queue:              rawptr,
+    queue_family_index: u32,
 }
 
 Environment :: struct {
-    defaults : Environment_Defaults,
-    metal : Metal_Environment,
-    d3d11 : D3d11_Environment,
-    wgpu : Wgpu_Environment,
-    vulkan : Vulkan_Environment,
+    defaults: Environment_Defaults,
+    metal:    Metal_Environment,
+    d3d11:    D3d11_Environment,
+    wgpu:     Wgpu_Environment,
+    vulkan:   Vulkan_Environment,
 }
 
 /*
@@ -2044,49 +2028,49 @@ Environment :: struct {
     sg_swapchain instead.
 */
 Metal_Swapchain :: struct {
-    current_drawable : rawptr,
-    depth_stencil_texture : rawptr,
-    msaa_color_texture : rawptr,
+    current_drawable:      rawptr,
+    depth_stencil_texture: rawptr,
+    msaa_color_texture:    rawptr,
 }
 
 D3d11_Swapchain :: struct {
-    render_view : rawptr,
-    resolve_view : rawptr,
-    depth_stencil_view : rawptr,
+    render_view:        rawptr,
+    resolve_view:       rawptr,
+    depth_stencil_view: rawptr,
 }
 
 Wgpu_Swapchain :: struct {
-    render_view : rawptr,
-    resolve_view : rawptr,
-    depth_stencil_view : rawptr,
+    render_view:        rawptr,
+    resolve_view:       rawptr,
+    depth_stencil_view: rawptr,
 }
 
 Vulkan_Swapchain :: struct {
-    render_image : rawptr,
-    render_view : rawptr,
-    resolve_image : rawptr,
-    resolve_view : rawptr,
-    depth_stencil_image : rawptr,
-    depth_stencil_view : rawptr,
-    render_finished_semaphore : rawptr,
-    present_complete_semaphore : rawptr,
+    render_image:               rawptr,
+    render_view:                rawptr,
+    resolve_image:              rawptr,
+    resolve_view:               rawptr,
+    depth_stencil_image:        rawptr,
+    depth_stencil_view:         rawptr,
+    render_finished_semaphore:  rawptr,
+    present_complete_semaphore: rawptr,
 }
 
 Gl_Swapchain :: struct {
-    framebuffer : u32,
+    framebuffer: u32,
 }
 
 Swapchain :: struct {
-    width : c.int,
-    height : c.int,
-    sample_count : c.int,
-    color_format : Pixel_Format,
-    depth_format : Pixel_Format,
-    metal : Metal_Swapchain,
-    d3d11 : D3d11_Swapchain,
-    wgpu : Wgpu_Swapchain,
-    vulkan : Vulkan_Swapchain,
-    gl : Gl_Swapchain,
+    width:        c.int,
+    height:       c.int,
+    sample_count: c.int,
+    color_format: Pixel_Format,
+    depth_format: Pixel_Format,
+    metal:        Metal_Swapchain,
+    d3d11:        D3d11_Swapchain,
+    wgpu:         Wgpu_Swapchain,
+    vulkan:       Vulkan_Swapchain,
+    gl:           Gl_Swapchain,
 }
 
 /*
@@ -2099,8 +2083,8 @@ Swapchain :: struct {
     the standard logging function from sokol_log.h).
 */
 Logger :: struct {
-    func : proc "c" (a0: cstring, a1: u32, a2: u32, a3: cstring, a4: u32, a5: cstring, a6: rawptr),
-    user_data : rawptr,
+    func:      proc "c" (a0: cstring, a1: u32, a2: u32, a3: cstring, a4: u32, a5: cstring, a6: rawptr),
+    user_data: rawptr,
 }
 
 /*
@@ -2108,66 +2092,66 @@ Logger :: struct {
     or sapp_run() argument.
 */
 Gl_Desc :: struct {
-    major_version : c.int,
-    minor_version : c.int,
+    major_version: c.int,
+    minor_version: c.int,
 }
 
 Win32_Desc :: struct {
-    console_utf8 : bool,
-    console_create : bool,
-    console_attach : bool,
+    console_utf8:   bool,
+    console_create: bool,
+    console_attach: bool,
 }
 
 Html5_Desc :: struct {
-    canvas_selector : cstring,
-    canvas_resize : bool,
-    preserve_drawing_buffer : bool,
-    premultiplied_alpha : bool,
-    ask_leave_site : bool,
-    update_document_title : bool,
-    bubble_mouse_events : bool,
-    bubble_touch_events : bool,
-    bubble_wheel_events : bool,
-    bubble_key_events : bool,
-    bubble_char_events : bool,
-    use_emsc_set_main_loop : bool,
-    emsc_set_main_loop_simulate_infinite_loop : bool,
+    canvas_selector:                           cstring,
+    canvas_resize:                             bool,
+    preserve_drawing_buffer:                   bool,
+    premultiplied_alpha:                       bool,
+    ask_leave_site:                            bool,
+    update_document_title:                     bool,
+    bubble_mouse_events:                       bool,
+    bubble_touch_events:                       bool,
+    bubble_wheel_events:                       bool,
+    bubble_key_events:                         bool,
+    bubble_char_events:                        bool,
+    use_emsc_set_main_loop:                    bool,
+    emsc_set_main_loop_simulate_infinite_loop: bool,
 }
 
 Ios_Desc :: struct {
-    keyboard_resizes_canvas : bool,
+    keyboard_resizes_canvas: bool,
 }
 
 Desc :: struct {
-    init_cb : proc "c" (),
-    frame_cb : proc "c" (),
-    cleanup_cb : proc "c" (),
-    event_cb : proc "c" (a0: ^Event),
-    user_data : rawptr,
-    init_userdata_cb : proc "c" (a0: rawptr),
-    frame_userdata_cb : proc "c" (a0: rawptr),
-    cleanup_userdata_cb : proc "c" (a0: rawptr),
-    event_userdata_cb : proc "c" (a0: ^Event, a1: rawptr),
-    width : c.int,
-    height : c.int,
-    sample_count : c.int,
-    swap_interval : c.int,
-    high_dpi : bool,
-    fullscreen : bool,
-    alpha : bool,
-    window_title : cstring,
-    enable_clipboard : bool,
-    clipboard_size : c.int,
-    enable_dragndrop : bool,
-    max_dropped_files : c.int,
-    max_dropped_file_path_length : c.int,
-    icon : Icon_Desc,
-    allocator : Allocator,
-    logger : Logger,
-    gl : Gl_Desc,
-    win32 : Win32_Desc,
-    html5 : Html5_Desc,
-    ios : Ios_Desc,
+    init_cb:                      proc "c" (),
+    frame_cb:                     proc "c" (),
+    cleanup_cb:                   proc "c" (),
+    event_cb:                     proc "c" (a0: ^Event),
+    user_data:                    rawptr,
+    init_userdata_cb:             proc "c" (a0: rawptr),
+    frame_userdata_cb:            proc "c" (a0: rawptr),
+    cleanup_userdata_cb:          proc "c" (a0: rawptr),
+    event_userdata_cb:            proc "c" (a0: ^Event, a1: rawptr),
+    width:                        c.int,
+    height:                       c.int,
+    sample_count:                 c.int,
+    swap_interval:                c.int,
+    high_dpi:                     bool,
+    fullscreen:                   bool,
+    alpha:                        bool,
+    window_title:                 cstring,
+    enable_clipboard:             bool,
+    clipboard_size:               c.int,
+    enable_dragndrop:             bool,
+    max_dropped_files:            c.int,
+    max_dropped_file_path_length: c.int,
+    icon:                         Icon_Desc,
+    allocator:                    Allocator,
+    logger:                       Logger,
+    gl:                           Gl_Desc,
+    win32:                        Win32_Desc,
+    html5:                        Html5_Desc,
+    ios:                          Ios_Desc,
 }
 
 /*
@@ -2181,19 +2165,19 @@ Html5_Fetch_Error :: enum i32 {
 }
 
 Html5_Fetch_Response :: struct {
-    succeeded : bool,
-    error_code : Html5_Fetch_Error,
-    file_index : c.int,
-    data : Range,
-    buffer : Range,
-    user_data : rawptr,
+    succeeded:  bool,
+    error_code: Html5_Fetch_Error,
+    file_index: c.int,
+    data:       Range,
+    buffer:     Range,
+    user_data:  rawptr,
 }
 
 Html5_Fetch_Request :: struct {
-    dropped_file_index : c.int,
-    callback : proc "c" (a0: ^Html5_Fetch_Response),
-    buffer : Range,
-    user_data : rawptr,
+    dropped_file_index: c.int,
+    callback:           proc "c" (a0: ^Html5_Fetch_Response),
+    buffer:             Range,
+    user_data:          rawptr,
 }
 
 /*
@@ -2230,4 +2214,3 @@ Mouse_Cursor :: enum i32 {
     CUSTOM_14,
     CUSTOM_15,
 }
-

@@ -203,4 +203,3 @@ rand :: proc(min_val, max_val: f32) -> f32 {
     r := xorshift32()
     return (f32(r & 0xFFFF) / 0x10000) * (max_val - min_val) + min_val
 }
-

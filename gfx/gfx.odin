@@ -1949,79 +1949,72 @@ SOKOL_DEBUG :: #config(SOKOL_DEBUG, ODIN_DEBUG)
 
 DEBUG :: #config(SOKOL_GFX_DEBUG, SOKOL_DEBUG)
 USE_GL :: #config(SOKOL_USE_GL, false)
+USE_VULKAN :: #config(SOKOL_USE_VULKAN, false)
 USE_DLL :: #config(SOKOL_DLL, false)
 
 when ODIN_OS == .Windows {
     when USE_DLL {
         when USE_GL {
-            when DEBUG { foreign import sokol_gfx_clib { "../sokol_dll_windows_x64_gl_debug.lib" } }
-            else       { foreign import sokol_gfx_clib { "../sokol_dll_windows_x64_gl_release.lib" } }
+            when DEBUG { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_gl_release.lib" }
         } else {
-            when DEBUG { foreign import sokol_gfx_clib { "../sokol_dll_windows_x64_d3d11_debug.lib" } }
-            else       { foreign import sokol_gfx_clib { "../sokol_dll_windows_x64_d3d11_release.lib" } }
+            when DEBUG { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_d3d11_release.lib" }
         }
     } else {
         when USE_GL {
-            when DEBUG { foreign import sokol_gfx_clib { "sokol_gfx_windows_x64_gl_debug.lib" } }
-            else       { foreign import sokol_gfx_clib { "sokol_gfx_windows_x64_gl_release.lib" } }
+            when DEBUG { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_gl_debug.lib" } else { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_gl_release.lib" }
         } else {
-            when DEBUG { foreign import sokol_gfx_clib { "sokol_gfx_windows_x64_d3d11_debug.lib" } }
-            else       { foreign import sokol_gfx_clib { "sokol_gfx_windows_x64_d3d11_release.lib" } }
+            when DEBUG { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_d3d11_debug.lib" } else { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_d3d11_release.lib" }
         }
     }
 } else when ODIN_OS == .Darwin {
     when USE_DLL {
-             when  USE_GL && ODIN_ARCH == .arm64 &&  DEBUG { foreign import sokol_gfx_clib { "../dylib/sokol_dylib_macos_arm64_gl_debug.dylib" } }
-        else when  USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_gfx_clib { "../dylib/sokol_dylib_macos_arm64_gl_release.dylib" } }
-        else when  USE_GL && ODIN_ARCH == .amd64 &&  DEBUG { foreign import sokol_gfx_clib { "../dylib/sokol_dylib_macos_x64_gl_debug.dylib" } }
-        else when  USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_gfx_clib { "../dylib/sokol_dylib_macos_x64_gl_release.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .arm64 &&  DEBUG { foreign import sokol_gfx_clib { "../dylib/sokol_dylib_macos_arm64_metal_debug.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_gfx_clib { "../dylib/sokol_dylib_macos_arm64_metal_release.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .amd64 &&  DEBUG { foreign import sokol_gfx_clib { "../dylib/sokol_dylib_macos_x64_metal_debug.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_gfx_clib { "../dylib/sokol_dylib_macos_x64_metal_release.dylib" } }
+        when USE_GL && ODIN_ARCH ==
+            .arm64 && DEBUG { foreign import sokol_gfx_clib "../dylib/sokol_dylib_macos_arm64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_gfx_clib "../dylib/sokol_dylib_macos_arm64_gl_release.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_gfx_clib "../dylib/sokol_dylib_macos_x64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_gfx_clib "../dylib/sokol_dylib_macos_x64_gl_release.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && DEBUG { foreign import sokol_gfx_clib "../dylib/sokol_dylib_macos_arm64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_gfx_clib "../dylib/sokol_dylib_macos_arm64_metal_release.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_gfx_clib "../dylib/sokol_dylib_macos_x64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_gfx_clib "../dylib/sokol_dylib_macos_x64_metal_release.dylib" }
     } else {
         when USE_GL {
             when ODIN_ARCH == .arm64 {
-                when DEBUG { foreign import sokol_gfx_clib { "sokol_gfx_macos_arm64_gl_debug.a", "system:Cocoa.framework","system:QuartzCore.framework","system:OpenGL.framework" } }
-                else       { foreign import sokol_gfx_clib { "sokol_gfx_macos_arm64_gl_release.a", "system:Cocoa.framework","system:QuartzCore.framework","system:OpenGL.framework" } }
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_macos_arm64_gl_debug.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:OpenGL.framework"} } else { foreign import sokol_gfx_clib {"sokol_gfx_macos_arm64_gl_release.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:OpenGL.framework"} }
             } else {
-                when DEBUG { foreign import sokol_gfx_clib { "sokol_gfx_macos_x64_gl_debug.a", "system:Cocoa.framework","system:QuartzCore.framework","system:OpenGL.framework" } }
-                else       { foreign import sokol_gfx_clib { "sokol_gfx_macos_x64_gl_release.a", "system:Cocoa.framework","system:QuartzCore.framework","system:OpenGL.framework" } }
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_macos_x64_gl_debug.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:OpenGL.framework"} } else { foreign import sokol_gfx_clib {"sokol_gfx_macos_x64_gl_release.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:OpenGL.framework"} }
             }
         } else {
             when ODIN_ARCH == .arm64 {
-                when DEBUG { foreign import sokol_gfx_clib { "sokol_gfx_macos_arm64_metal_debug.a", "system:Cocoa.framework","system:QuartzCore.framework","system:Metal.framework","system:MetalKit.framework" } }
-                else       { foreign import sokol_gfx_clib { "sokol_gfx_macos_arm64_metal_release.a", "system:Cocoa.framework","system:QuartzCore.framework","system:Metal.framework","system:MetalKit.framework" } }
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_macos_arm64_metal_debug.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:Metal.framework", "system:MetalKit.framework"} } else { foreign import sokol_gfx_clib {"sokol_gfx_macos_arm64_metal_release.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:Metal.framework", "system:MetalKit.framework"} }
             } else {
-                when DEBUG { foreign import sokol_gfx_clib { "sokol_gfx_macos_x64_metal_debug.a", "system:Cocoa.framework","system:QuartzCore.framework","system:Metal.framework","system:MetalKit.framework" } }
-                else       { foreign import sokol_gfx_clib { "sokol_gfx_macos_x64_metal_release.a", "system:Cocoa.framework","system:QuartzCore.framework","system:Metal.framework","system:MetalKit.framework" } }
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_macos_x64_metal_debug.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:Metal.framework", "system:MetalKit.framework"} } else { foreign import sokol_gfx_clib {"sokol_gfx_macos_x64_metal_release.a", "system:Cocoa.framework", "system:QuartzCore.framework", "system:Metal.framework", "system:MetalKit.framework"} }
             }
         }
     }
 } else when ODIN_OS == .Linux {
-    when USE_DLL {
-        when DEBUG { foreign import sokol_gfx_clib { "sokol_gfx_linux_x64_gl_debug.so", "system:GL", "system:dl", "system:pthread" } }
-        else       { foreign import sokol_gfx_clib { "sokol_gfx_linux_x64_gl_release.so", "system:GL", "system:dl", "system:pthread" } }
+    when USE_VULKAN {
+        when USE_DLL {
+            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_debug.so", "system:vulkan", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_release.so", "system:vulkan", "system:dl", "system:pthread"} }
+        } else {
+            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_debug.a", "system:vulkan", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_release.a", "system:vulkan", "system:dl", "system:pthread"} }
+        }
     } else {
-        when DEBUG { foreign import sokol_gfx_clib { "sokol_gfx_linux_x64_gl_debug.a", "system:GL", "system:dl", "system:pthread" } }
-        else       { foreign import sokol_gfx_clib { "sokol_gfx_linux_x64_gl_release.a", "system:GL", "system:dl", "system:pthread" } }
+        when USE_DLL {
+            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_debug.so", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_release.so", "system:GL", "system:dl", "system:pthread"} }
+        } else {
+            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_debug.a", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_release.a", "system:GL", "system:dl", "system:pthread"} }
+        }
     }
 } else when ODIN_ARCH == .wasm32 || ODIN_ARCH == .wasm64p32 {
     // Feed sokol_gfx_wasm_gl_debug.a or sokol_gfx_wasm_gl_release.a into emscripten compiler.
-    foreign import sokol_gfx_clib { "env.o" }
+    foreign import sokol_gfx_clib "env.o"
 } else {
     #panic("This OS is currently not supported")
 }
 
-@(default_calling_convention="c", link_prefix="sg_")
+@(default_calling_convention = "c", link_prefix = "sg_")
 foreign sokol_gfx_clib {
     // setup and misc functions
-    setup :: proc(#by_ptr desc: Desc)  ---
-    shutdown :: proc()  ---
+    setup :: proc(#by_ptr desc: Desc) ---
+    shutdown :: proc() ---
     isvalid :: proc() -> bool ---
-    reset_state_cache :: proc()  ---
-    push_debug_group :: proc(name: cstring)  ---
-    pop_debug_group :: proc()  ---
+    reset_state_cache :: proc() ---
+    push_debug_group :: proc(name: cstring) ---
+    pop_debug_group :: proc() ---
     add_commit_listener :: proc(listener: Commit_Listener) -> bool ---
     remove_commit_listener :: proc(listener: Commit_Listener) -> bool ---
     // resource creation, destruction and updating
@@ -2031,31 +2024,31 @@ foreign sokol_gfx_clib {
     make_shader :: proc(#by_ptr desc: Shader_Desc) -> Shader ---
     make_pipeline :: proc(#by_ptr desc: Pipeline_Desc) -> Pipeline ---
     make_view :: proc(#by_ptr desc: View_Desc) -> View ---
-    destroy_buffer :: proc(buf: Buffer)  ---
-    destroy_image :: proc(img: Image)  ---
-    destroy_sampler :: proc(smp: Sampler)  ---
-    destroy_shader :: proc(shd: Shader)  ---
-    destroy_pipeline :: proc(pip: Pipeline)  ---
-    destroy_view :: proc(view: View)  ---
-    update_buffer :: proc(buf: Buffer, #by_ptr data: Range)  ---
-    update_image :: proc(img: Image, #by_ptr data: Image_Data)  ---
+    destroy_buffer :: proc(buf: Buffer) ---
+    destroy_image :: proc(img: Image) ---
+    destroy_sampler :: proc(smp: Sampler) ---
+    destroy_shader :: proc(shd: Shader) ---
+    destroy_pipeline :: proc(pip: Pipeline) ---
+    destroy_view :: proc(view: View) ---
+    update_buffer :: proc(buf: Buffer, #by_ptr data: Range) ---
+    update_image :: proc(img: Image, #by_ptr data: Image_Data) ---
     append_buffer :: proc(buf: Buffer, #by_ptr data: Range) -> c.int ---
     query_buffer_overflow :: proc(buf: Buffer) -> bool ---
     query_buffer_will_overflow :: proc(buf: Buffer, size: c.size_t) -> bool ---
     // render and compute functions
-    begin_pass :: proc(#by_ptr pass: Pass)  ---
-    apply_viewport :: proc(#any_int x: c.int, #any_int y: c.int, #any_int width: c.int, #any_int height: c.int, origin_top_left: bool)  ---
-    apply_viewportf :: proc(x: f32, y: f32, width: f32, height: f32, origin_top_left: bool)  ---
-    apply_scissor_rect :: proc(#any_int x: c.int, #any_int y: c.int, #any_int width: c.int, #any_int height: c.int, origin_top_left: bool)  ---
-    apply_scissor_rectf :: proc(x: f32, y: f32, width: f32, height: f32, origin_top_left: bool)  ---
-    apply_pipeline :: proc(pip: Pipeline)  ---
-    apply_bindings :: proc(#by_ptr bindings: Bindings)  ---
-    apply_uniforms :: proc(#any_int ub_slot: c.int, #by_ptr data: Range)  ---
-    draw :: proc(#any_int base_element: c.int, #any_int num_elements: c.int, #any_int num_instances: c.int)  ---
-    draw_ex :: proc(#any_int base_element: c.int, #any_int num_elements: c.int, #any_int num_instances: c.int, #any_int base_vertex: c.int, #any_int base_instance: c.int)  ---
-    dispatch :: proc(#any_int num_groups_x: c.int, #any_int num_groups_y: c.int, #any_int num_groups_z: c.int)  ---
-    end_pass :: proc()  ---
-    commit :: proc()  ---
+    begin_pass :: proc(#by_ptr pass: Pass) ---
+    apply_viewport :: proc(#any_int x: c.int, #any_int y: c.int, #any_int width: c.int, #any_int height: c.int, origin_top_left: bool) ---
+    apply_viewportf :: proc(x: f32, y: f32, width: f32, height: f32, origin_top_left: bool) ---
+    apply_scissor_rect :: proc(#any_int x: c.int, #any_int y: c.int, #any_int width: c.int, #any_int height: c.int, origin_top_left: bool) ---
+    apply_scissor_rectf :: proc(x: f32, y: f32, width: f32, height: f32, origin_top_left: bool) ---
+    apply_pipeline :: proc(pip: Pipeline) ---
+    apply_bindings :: proc(#by_ptr bindings: Bindings) ---
+    apply_uniforms :: proc(#any_int ub_slot: c.int, #by_ptr data: Range) ---
+    draw :: proc(#any_int base_element: c.int, #any_int num_elements: c.int, #any_int num_instances: c.int) ---
+    draw_ex :: proc(#any_int base_element: c.int, #any_int num_elements: c.int, #any_int num_instances: c.int, #any_int base_vertex: c.int, #any_int base_instance: c.int) ---
+    dispatch :: proc(#any_int num_groups_x: c.int, #any_int num_groups_y: c.int, #any_int num_groups_z: c.int) ---
+    end_pass :: proc() ---
+    commit :: proc() ---
     // getting information
     query_desc :: proc() -> Desc ---
     query_backend :: proc() -> Backend ---
@@ -2116,33 +2109,33 @@ foreign sokol_gfx_clib {
     alloc_shader :: proc() -> Shader ---
     alloc_pipeline :: proc() -> Pipeline ---
     alloc_view :: proc() -> View ---
-    dealloc_buffer :: proc(buf: Buffer)  ---
-    dealloc_image :: proc(img: Image)  ---
-    dealloc_sampler :: proc(smp: Sampler)  ---
-    dealloc_shader :: proc(shd: Shader)  ---
-    dealloc_pipeline :: proc(pip: Pipeline)  ---
-    dealloc_view :: proc(view: View)  ---
-    init_buffer :: proc(buf: Buffer, #by_ptr desc: Buffer_Desc)  ---
-    init_image :: proc(img: Image, #by_ptr desc: Image_Desc)  ---
-    init_sampler :: proc(smg: Sampler, #by_ptr desc: Sampler_Desc)  ---
-    init_shader :: proc(shd: Shader, #by_ptr desc: Shader_Desc)  ---
-    init_pipeline :: proc(pip: Pipeline, #by_ptr desc: Pipeline_Desc)  ---
-    init_view :: proc(view: View, #by_ptr desc: View_Desc)  ---
-    uninit_buffer :: proc(buf: Buffer)  ---
-    uninit_image :: proc(img: Image)  ---
-    uninit_sampler :: proc(smp: Sampler)  ---
-    uninit_shader :: proc(shd: Shader)  ---
-    uninit_pipeline :: proc(pip: Pipeline)  ---
-    uninit_view :: proc(view: View)  ---
-    fail_buffer :: proc(buf: Buffer)  ---
-    fail_image :: proc(img: Image)  ---
-    fail_sampler :: proc(smp: Sampler)  ---
-    fail_shader :: proc(shd: Shader)  ---
-    fail_pipeline :: proc(pip: Pipeline)  ---
-    fail_view :: proc(view: View)  ---
+    dealloc_buffer :: proc(buf: Buffer) ---
+    dealloc_image :: proc(img: Image) ---
+    dealloc_sampler :: proc(smp: Sampler) ---
+    dealloc_shader :: proc(shd: Shader) ---
+    dealloc_pipeline :: proc(pip: Pipeline) ---
+    dealloc_view :: proc(view: View) ---
+    init_buffer :: proc(buf: Buffer, #by_ptr desc: Buffer_Desc) ---
+    init_image :: proc(img: Image, #by_ptr desc: Image_Desc) ---
+    init_sampler :: proc(smg: Sampler, #by_ptr desc: Sampler_Desc) ---
+    init_shader :: proc(shd: Shader, #by_ptr desc: Shader_Desc) ---
+    init_pipeline :: proc(pip: Pipeline, #by_ptr desc: Pipeline_Desc) ---
+    init_view :: proc(view: View, #by_ptr desc: View_Desc) ---
+    uninit_buffer :: proc(buf: Buffer) ---
+    uninit_image :: proc(img: Image) ---
+    uninit_sampler :: proc(smp: Sampler) ---
+    uninit_shader :: proc(shd: Shader) ---
+    uninit_pipeline :: proc(pip: Pipeline) ---
+    uninit_view :: proc(view: View) ---
+    fail_buffer :: proc(buf: Buffer) ---
+    fail_image :: proc(img: Image) ---
+    fail_sampler :: proc(smp: Sampler) ---
+    fail_shader :: proc(shd: Shader) ---
+    fail_pipeline :: proc(pip: Pipeline) ---
+    fail_view :: proc(view: View) ---
     // frame and total stats
-    enable_stats :: proc()  ---
-    disable_stats :: proc()  ---
+    enable_stats :: proc() ---
+    disable_stats :: proc() ---
     stats_enabled :: proc() -> bool ---
     query_stats :: proc() -> Stats ---
     // D3D11: return ID3D11Device
@@ -2163,6 +2156,8 @@ foreign sokol_gfx_clib {
     d3d11_query_view_info :: proc(view: View) -> D3d11_View_Info ---
     // Metal: return __bridge-casted MTLDevice
     mtl_device :: proc() -> rawptr ---
+    // Metal: return __bridge-casted current frame MTLCommandBuffer
+    mtl_command_buffer :: proc() -> rawptr ---
     // Metal: return __bridge-casted MTLRenderCommandEncoder when inside render pass (otherwise zero)
     mtl_render_command_encoder :: proc() -> rawptr ---
     // Metal: return __bridge-casted MTLComputeCommandEncoder when inside compute pass (otherwise zero)
@@ -2234,27 +2229,27 @@ foreign sokol_gfx_clib {
     trying to pass an incompatible resource id is a compile error.
 */
 Buffer :: struct {
-    id : u32,
+    id: u32,
 }
 
 Image :: struct {
-    id : u32,
+    id: u32,
 }
 
 Sampler :: struct {
-    id : u32,
+    id: u32,
 }
 
 Shader :: struct {
-    id : u32,
+    id: u32,
 }
 
 Pipeline :: struct {
-    id : u32,
+    id: u32,
 }
 
 View :: struct {
-    id : u32,
+    id: u32,
 }
 
 /*
@@ -2265,8 +2260,8 @@ View :: struct {
     SG_RANGE_REF macro as a solution which compiles both in C and C++.
 */
 Range :: struct {
-    ptr : rawptr,
-    size : c.size_t,
+    ptr:  rawptr,
+    size: c.size_t,
 }
 
 // various compile-time constants in the public API
@@ -2291,12 +2286,7 @@ MAX_PORTABLE_STORAGEIMAGE_BINDINGS_PER_STAGE :: 4
 
     An RGBA color value.
 */
-Color :: struct {
-    r : f32,
-    g : f32,
-    b : f32,
-    a : f32,
-}
+Color :: [4]f32
 
 /*
     sg_backend
@@ -2431,48 +2421,48 @@ Pixel_Format :: enum i32 {
 
 // Runtime information about a pixel format, returned by sg_query_pixelformat().
 Pixelformat_Info :: struct {
-    sample : bool,
-    filter : bool,
-    render : bool,
-    blend : bool,
-    msaa : bool,
-    depth : bool,
-    compressed : bool,
-    read : bool,
-    write : bool,
-    bytes_per_pixel : c.int,
+    sample:          bool,
+    filter:          bool,
+    render:          bool,
+    blend:           bool,
+    msaa:            bool,
+    depth:           bool,
+    compressed:      bool,
+    read:            bool,
+    write:           bool,
+    bytes_per_pixel: c.int,
 }
 
 // Runtime information about available optional features, returned by sg_query_features()
 Features :: struct {
-    origin_top_left : bool,
-    image_clamp_to_border : bool,
-    mrt_independent_blend_state : bool,
-    mrt_independent_write_mask : bool,
-    compute : bool,
-    msaa_texture_bindings : bool,
-    separate_buffer_types : bool,
-    draw_base_vertex : bool,
-    draw_base_instance : bool,
-    gl_texture_views : bool,
+    origin_top_left:             bool,
+    image_clamp_to_border:       bool,
+    mrt_independent_blend_state: bool,
+    mrt_independent_write_mask:  bool,
+    compute:                     bool,
+    msaa_texture_bindings:       bool,
+    separate_buffer_types:       bool,
+    draw_base_vertex:            bool,
+    draw_base_instance:          bool,
+    gl_texture_views:            bool,
 }
 
 // Runtime information about resource limits, returned by sg_query_limit()
 Limits :: struct {
-    max_image_size_2d : c.int,
-    max_image_size_cube : c.int,
-    max_image_size_3d : c.int,
-    max_image_size_array : c.int,
-    max_image_array_layers : c.int,
-    max_vertex_attrs : c.int,
-    max_color_attachments : c.int,
-    max_texture_bindings_per_stage : c.int,
-    max_storage_buffer_bindings_per_stage : c.int,
-    max_storage_image_bindings_per_stage : c.int,
-    gl_max_vertex_uniform_components : c.int,
-    gl_max_combined_texture_image_units : c.int,
-    d3d11_max_unordered_access_views : c.int,
-    vk_min_uniform_buffer_offset_alignment : c.int,
+    max_image_size_2d:                      c.int,
+    max_image_size_cube:                    c.int,
+    max_image_size_3d:                      c.int,
+    max_image_size_array:                   c.int,
+    max_image_array_layers:                 c.int,
+    max_vertex_attrs:                       c.int,
+    max_color_attachments:                  c.int,
+    max_texture_bindings_per_stage:         c.int,
+    max_storage_buffer_bindings_per_stage:  c.int,
+    max_storage_image_bindings_per_stage:   c.int,
+    gl_max_vertex_uniform_components:       c.int,
+    gl_max_combined_texture_image_units:    c.int,
+    d3d11_max_unordered_access_views:       c.int,
+    vk_min_uniform_buffer_offset_alignment: c.int,
 }
 
 /*
@@ -2960,22 +2950,22 @@ Blend_Op :: enum i32 {
 */
 Color_Mask :: enum i32 {
     DEFAULT = 0,
-    NONE = 16,
-    R = 1,
-    G = 2,
-    RG = 3,
-    B = 4,
-    RB = 5,
-    GB = 6,
-    RGB = 7,
-    A = 8,
-    RA = 9,
-    GA = 10,
-    RGA = 11,
-    BA = 12,
-    RBA = 13,
-    GBA = 14,
-    RGBA = 15,
+    NONE    = 16,
+    R       = 1,
+    G       = 2,
+    RG      = 3,
+    B       = 4,
+    RB      = 5,
+    GB      = 6,
+    RGB     = 7,
+    A       = 8,
+    RA      = 9,
+    GA      = 10,
+    RGA     = 11,
+    BA      = 12,
+    RBA     = 13,
+    GBA     = 14,
+    RGBA    = 15,
 }
 
 /*
@@ -3030,27 +3020,27 @@ Store_Action :: enum i32 {
       stored back into the render attachment or discarded
 */
 Color_Attachment_Action :: struct {
-    load_action : Load_Action,
-    store_action : Store_Action,
-    clear_value : Color,
+    load_action:  Load_Action,
+    store_action: Store_Action,
+    clear_value:  Color,
 }
 
 Depth_Attachment_Action :: struct {
-    load_action : Load_Action,
-    store_action : Store_Action,
-    clear_value : f32,
+    load_action:  Load_Action,
+    store_action: Store_Action,
+    clear_value:  f32,
 }
 
 Stencil_Attachment_Action :: struct {
-    load_action : Load_Action,
-    store_action : Store_Action,
-    clear_value : u8,
+    load_action:  Load_Action,
+    store_action: Store_Action,
+    clear_value:  u8,
 }
 
 Pass_Action :: struct {
-    colors : [8]Color_Attachment_Action,
-    depth : Depth_Attachment_Action,
-    stencil : Stencil_Attachment_Action,
+    colors:  [8]Color_Attachment_Action,
+    depth:   Depth_Attachment_Action,
+    stencil: Stencil_Attachment_Action,
 }
 
 /*
@@ -3119,49 +3109,49 @@ Pass_Action :: struct {
     as an example.
 */
 Metal_Swapchain :: struct {
-    current_drawable : rawptr,
-    depth_stencil_texture : rawptr,
-    msaa_color_texture : rawptr,
+    current_drawable:      rawptr,
+    depth_stencil_texture: rawptr,
+    msaa_color_texture:    rawptr,
 }
 
 D3d11_Swapchain :: struct {
-    render_view : rawptr,
-    resolve_view : rawptr,
-    depth_stencil_view : rawptr,
+    render_view:        rawptr,
+    resolve_view:       rawptr,
+    depth_stencil_view: rawptr,
 }
 
 Wgpu_Swapchain :: struct {
-    render_view : rawptr,
-    resolve_view : rawptr,
-    depth_stencil_view : rawptr,
+    render_view:        rawptr,
+    resolve_view:       rawptr,
+    depth_stencil_view: rawptr,
 }
 
 Vulkan_Swapchain :: struct {
-    render_image : rawptr,
-    render_view : rawptr,
-    resolve_image : rawptr,
-    resolve_view : rawptr,
-    depth_stencil_image : rawptr,
-    depth_stencil_view : rawptr,
-    render_finished_semaphore : rawptr,
-    present_complete_semaphore : rawptr,
+    render_image:               rawptr,
+    render_view:                rawptr,
+    resolve_image:              rawptr,
+    resolve_view:               rawptr,
+    depth_stencil_image:        rawptr,
+    depth_stencil_view:         rawptr,
+    render_finished_semaphore:  rawptr,
+    present_complete_semaphore: rawptr,
 }
 
 Gl_Swapchain :: struct {
-    framebuffer : u32,
+    framebuffer: u32,
 }
 
 Swapchain :: struct {
-    width : c.int,
-    height : c.int,
-    sample_count : c.int,
-    color_format : Pixel_Format,
-    depth_format : Pixel_Format,
-    metal : Metal_Swapchain,
-    d3d11 : D3d11_Swapchain,
-    wgpu : Wgpu_Swapchain,
-    vulkan : Vulkan_Swapchain,
-    gl : Gl_Swapchain,
+    width:        c.int,
+    height:       c.int,
+    sample_count: c.int,
+    color_format: Pixel_Format,
+    depth_format: Pixel_Format,
+    metal:        Metal_Swapchain,
+    d3d11:        D3d11_Swapchain,
+    wgpu:         Wgpu_Swapchain,
+    vulkan:       Vulkan_Swapchain,
+    gl:           Gl_Swapchain,
 }
 
 /*
@@ -3192,9 +3182,9 @@ Swapchain :: struct {
         });
 */
 Attachments :: struct {
-    colors : [8]View,
-    resolves : [8]View,
-    depth_stencil : View,
+    colors:        [8]View,
+    resolves:      [8]View,
+    depth_stencil: View,
 }
 
 /*
@@ -3232,13 +3222,13 @@ Attachments :: struct {
         sg_begin_pass(&(sg_pass){ .compute = true });
 */
 Pass :: struct {
-    _ : u32,
-    compute : bool,
-    action : Pass_Action,
-    attachments : Attachments,
-    swapchain : Swapchain,
-    label : cstring,
-    _ : u32,
+    _:           u32,
+    compute:     bool,
+    action:      Pass_Action,
+    attachments: Attachments,
+    swapchain:   Swapchain,
+    label:       cstring,
+    _:           u32,
 }
 
 /*
@@ -3327,14 +3317,14 @@ Pass :: struct {
     chunks of vertex- and/or index-data into the same buffer objects.
 */
 Bindings :: struct {
-    _ : u32,
-    vertex_buffers : [8]Buffer,
-    vertex_buffer_offsets : [8]c.int,
-    index_buffer : Buffer,
-    index_buffer_offset : c.int,
-    views : [32]View,
-    samplers : [12]Sampler,
-    _ : u32,
+    _:                     u32,
+    vertex_buffers:        [8]Buffer,
+    vertex_buffer_offsets: [8]c.int,
+    index_buffer:          Buffer,
+    index_buffer_offset:   c.int,
+    views:                 [32]View,
+    samplers:              [12]Sampler,
+    _:                     u32,
 }
 
 /*
@@ -3358,12 +3348,12 @@ Bindings :: struct {
         the buffer content will be updated each frame from the CPU side
 */
 Buffer_Usage :: struct {
-    vertex_buffer : bool,
-    index_buffer : bool,
-    storage_buffer : bool,
-    immutable : bool,
-    dynamic_update : bool,
-    stream_update : bool,
+    vertex_buffer:  bool,
+    index_buffer:   bool,
+    storage_buffer: bool,
+    immutable:      bool,
+    dynamic_update: bool,
+    stream_update:  bool,
 }
 
 /*
@@ -3422,16 +3412,16 @@ Buffer_Usage :: struct {
     functions, and before calling any sokol_gfx function.
 */
 Buffer_Desc :: struct {
-    _ : u32,
-    size : c.size_t,
-    usage : Buffer_Usage,
-    data : Range,
-    label : cstring,
-    gl_buffers : [2]u32,
-    mtl_buffers : [2]rawptr,
-    d3d11_buffer : rawptr,
-    wgpu_buffer : rawptr,
-    _ : u32,
+    _:            u32,
+    size:         c.size_t,
+    usage:        Buffer_Usage,
+    data:         Range,
+    label:        cstring,
+    gl_buffers:   [2]u32,
+    mtl_buffers:  [2]rawptr,
+    d3d11_buffer: rawptr,
+    wgpu_buffer:  rawptr,
+    _:            u32,
 }
 
 /*
@@ -3469,13 +3459,13 @@ Buffer_Desc :: struct {
     is always implicitly allowed.
 */
 Image_Usage :: struct {
-    storage_image : bool,
-    color_attachment : bool,
-    resolve_attachment : bool,
-    depth_stencil_attachment : bool,
-    immutable : bool,
-    dynamic_update : bool,
-    stream_update : bool,
+    storage_image:            bool,
+    color_attachment:         bool,
+    resolve_attachment:       bool,
+    depth_stencil_attachment: bool,
+    immutable:                bool,
+    dynamic_update:           bool,
+    stream_update:            bool,
 }
 
 /*
@@ -3524,7 +3514,7 @@ View_Type :: enum i32 {
         [5] => -Z
 */
 Image_Data :: struct {
-    mip_levels : [16]Range,
+    mip_levels: [16]Range,
 }
 
 /*
@@ -3583,23 +3573,23 @@ Image_Data :: struct {
     documentation for more details).
 */
 Image_Desc :: struct {
-    _ : u32,
-    type : Image_Type,
-    usage : Image_Usage,
-    width : c.int,
-    height : c.int,
-    num_slices : c.int,
-    num_mipmaps : c.int,
-    pixel_format : Pixel_Format,
-    sample_count : c.int,
-    data : Image_Data,
-    label : cstring,
-    gl_textures : [2]u32,
-    gl_texture_target : u32,
-    mtl_textures : [2]rawptr,
-    d3d11_texture : rawptr,
-    wgpu_texture : rawptr,
-    _ : u32,
+    _:                 u32,
+    type:              Image_Type,
+    usage:             Image_Usage,
+    width:             c.int,
+    height:            c.int,
+    num_slices:        c.int,
+    num_mipmaps:       c.int,
+    pixel_format:      Pixel_Format,
+    sample_count:      c.int,
+    data:              Image_Data,
+    label:             cstring,
+    gl_textures:       [2]u32,
+    gl_texture_target: u32,
+    mtl_textures:      [2]rawptr,
+    d3d11_texture:     rawptr,
+    wgpu_texture:      rawptr,
+    _:                 u32,
 }
 
 /*
@@ -3620,24 +3610,24 @@ Image_Desc :: struct {
     .max_anisotropy     1 (must be 1..16)
 */
 Sampler_Desc :: struct {
-    _ : u32,
-    min_filter : Filter,
-    mag_filter : Filter,
-    mipmap_filter : Filter,
-    wrap_u : Wrap,
-    wrap_v : Wrap,
-    wrap_w : Wrap,
-    min_lod : f32,
-    max_lod : f32,
-    border_color : Border_Color,
-    compare : Compare_Func,
-    max_anisotropy : u32,
-    label : cstring,
-    gl_sampler : u32,
-    mtl_sampler : rawptr,
-    d3d11_sampler : rawptr,
-    wgpu_sampler : rawptr,
-    _ : u32,
+    _:              u32,
+    min_filter:     Filter,
+    mag_filter:     Filter,
+    mipmap_filter:  Filter,
+    wrap_u:         Wrap,
+    wrap_v:         Wrap,
+    wrap_w:         Wrap,
+    min_lod:        f32,
+    max_lod:        f32,
+    border_color:   Border_Color,
+    compare:        Compare_Func,
+    max_anisotropy: u32,
+    label:          cstring,
+    gl_sampler:     u32,
+    mtl_sampler:    rawptr,
+    d3d11_sampler:  rawptr,
+    wgpu_sampler:   rawptr,
+    _:              u32,
 }
 
 /*
@@ -3792,11 +3782,11 @@ Shader_Stage :: enum i32 {
 }
 
 Shader_Function :: struct {
-    source : cstring,
-    bytecode : Range,
-    entry : cstring,
-    d3d11_target : cstring,
-    d3d11_filepath : cstring,
+    source:         cstring,
+    bytecode:       Range,
+    entry:          cstring,
+    d3d11_target:   cstring,
+    d3d11_filepath: cstring,
 }
 
 Shader_Attr_Base_Type :: enum i32 {
@@ -3807,104 +3797,104 @@ Shader_Attr_Base_Type :: enum i32 {
 }
 
 Shader_Vertex_Attr :: struct {
-    base_type : Shader_Attr_Base_Type,
-    glsl_name : cstring,
-    hlsl_sem_name : cstring,
-    hlsl_sem_index : u8,
+    base_type:      Shader_Attr_Base_Type,
+    glsl_name:      cstring,
+    hlsl_sem_name:  cstring,
+    hlsl_sem_index: u8,
 }
 
 Glsl_Shader_Uniform :: struct {
-    type : Uniform_Type,
-    array_count : u16,
-    glsl_name : cstring,
+    type:        Uniform_Type,
+    array_count: u16,
+    glsl_name:   cstring,
 }
 
 Shader_Uniform_Block :: struct {
-    stage : Shader_Stage,
-    size : u32,
-    hlsl_register_b_n : u8,
-    msl_buffer_n : u8,
-    wgsl_group0_binding_n : u8,
-    spirv_set0_binding_n : u8,
-    layout : Uniform_Layout,
-    glsl_uniforms : [16]Glsl_Shader_Uniform,
+    stage:                 Shader_Stage,
+    size:                  u32,
+    hlsl_register_b_n:     u8,
+    msl_buffer_n:          u8,
+    wgsl_group0_binding_n: u8,
+    spirv_set0_binding_n:  u8,
+    layout:                Uniform_Layout,
+    glsl_uniforms:         [16]Glsl_Shader_Uniform,
 }
 
 Shader_Texture_View :: struct {
-    stage : Shader_Stage,
-    image_type : Image_Type,
-    sample_type : Image_Sample_Type,
-    multisampled : bool,
-    hlsl_register_t_n : u8,
-    msl_texture_n : u8,
-    wgsl_group1_binding_n : u8,
-    spirv_set1_binding_n : u8,
+    stage:                 Shader_Stage,
+    image_type:            Image_Type,
+    sample_type:           Image_Sample_Type,
+    multisampled:          bool,
+    hlsl_register_t_n:     u8,
+    msl_texture_n:         u8,
+    wgsl_group1_binding_n: u8,
+    spirv_set1_binding_n:  u8,
 }
 
 Shader_Storage_Buffer_View :: struct {
-    stage : Shader_Stage,
-    readonly : bool,
-    hlsl_register_t_n : u8,
-    hlsl_register_u_n : u8,
-    msl_buffer_n : u8,
-    wgsl_group1_binding_n : u8,
-    spirv_set1_binding_n : u8,
-    glsl_binding_n : u8,
+    stage:                 Shader_Stage,
+    readonly:              bool,
+    hlsl_register_t_n:     u8,
+    hlsl_register_u_n:     u8,
+    msl_buffer_n:          u8,
+    wgsl_group1_binding_n: u8,
+    spirv_set1_binding_n:  u8,
+    glsl_binding_n:        u8,
 }
 
 Shader_Storage_Image_View :: struct {
-    stage : Shader_Stage,
-    image_type : Image_Type,
-    access_format : Pixel_Format,
-    writeonly : bool,
-    hlsl_register_u_n : u8,
-    msl_texture_n : u8,
-    wgsl_group1_binding_n : u8,
-    spirv_set1_binding_n : u8,
-    glsl_binding_n : u8,
+    stage:                 Shader_Stage,
+    image_type:            Image_Type,
+    access_format:         Pixel_Format,
+    writeonly:             bool,
+    hlsl_register_u_n:     u8,
+    msl_texture_n:         u8,
+    wgsl_group1_binding_n: u8,
+    spirv_set1_binding_n:  u8,
+    glsl_binding_n:        u8,
 }
 
 Shader_View :: struct {
-    texture : Shader_Texture_View,
-    storage_buffer : Shader_Storage_Buffer_View,
-    storage_image : Shader_Storage_Image_View,
+    texture:        Shader_Texture_View,
+    storage_buffer: Shader_Storage_Buffer_View,
+    storage_image:  Shader_Storage_Image_View,
 }
 
 Shader_Sampler :: struct {
-    stage : Shader_Stage,
-    sampler_type : Sampler_Type,
-    hlsl_register_s_n : u8,
-    msl_sampler_n : u8,
-    wgsl_group1_binding_n : u8,
-    spirv_set1_binding_n : u8,
+    stage:                 Shader_Stage,
+    sampler_type:          Sampler_Type,
+    hlsl_register_s_n:     u8,
+    msl_sampler_n:         u8,
+    wgsl_group1_binding_n: u8,
+    spirv_set1_binding_n:  u8,
 }
 
 Shader_Texture_Sampler_Pair :: struct {
-    stage : Shader_Stage,
-    view_slot : u8,
-    sampler_slot : u8,
-    glsl_name : cstring,
+    stage:        Shader_Stage,
+    view_slot:    u8,
+    sampler_slot: u8,
+    glsl_name:    cstring,
 }
 
 Mtl_Shader_Threads_Per_Threadgroup :: struct {
-    x : c.int,
-    y : c.int,
-    z : c.int,
+    x: c.int,
+    y: c.int,
+    z: c.int,
 }
 
 Shader_Desc :: struct {
-    _ : u32,
-    vertex_func : Shader_Function,
-    fragment_func : Shader_Function,
-    compute_func : Shader_Function,
-    attrs : [16]Shader_Vertex_Attr,
-    uniform_blocks : [8]Shader_Uniform_Block,
-    views : [32]Shader_View,
-    samplers : [12]Shader_Sampler,
-    texture_sampler_pairs : [32]Shader_Texture_Sampler_Pair,
-    mtl_threads_per_threadgroup : Mtl_Shader_Threads_Per_Threadgroup,
-    label : cstring,
-    _ : u32,
+    _:                           u32,
+    vertex_func:                 Shader_Function,
+    fragment_func:               Shader_Function,
+    compute_func:                Shader_Function,
+    attrs:                       [16]Shader_Vertex_Attr,
+    uniform_blocks:              [8]Shader_Uniform_Block,
+    views:                       [32]Shader_View,
+    samplers:                    [12]Shader_Sampler,
+    texture_sampler_pairs:       [32]Shader_Texture_Sampler_Pair,
+    mtl_threads_per_threadgroup: Mtl_Shader_Threads_Per_Threadgroup,
+    label:                       cstring,
+    _:                           u32,
 }
 
 /*
@@ -3991,81 +3981,81 @@ Shader_Desc :: struct {
     .label  0       (optional string label for trace hooks)
 */
 Vertex_Buffer_Layout_State :: struct {
-    stride : c.int,
-    step_func : Vertex_Step,
-    step_rate : c.int,
+    stride:    c.int,
+    step_func: Vertex_Step,
+    step_rate: c.int,
 }
 
 Vertex_Attr_State :: struct {
-    buffer_index : c.int,
-    offset : c.int,
-    format : Vertex_Format,
+    buffer_index: c.int,
+    offset:       c.int,
+    format:       Vertex_Format,
 }
 
 Vertex_Layout_State :: struct {
-    buffers : [8]Vertex_Buffer_Layout_State,
-    attrs : [16]Vertex_Attr_State,
+    buffers: [8]Vertex_Buffer_Layout_State,
+    attrs:   [16]Vertex_Attr_State,
 }
 
 Stencil_Face_State :: struct {
-    compare : Compare_Func,
-    fail_op : Stencil_Op,
-    depth_fail_op : Stencil_Op,
-    pass_op : Stencil_Op,
+    compare:       Compare_Func,
+    fail_op:       Stencil_Op,
+    depth_fail_op: Stencil_Op,
+    pass_op:       Stencil_Op,
 }
 
 Stencil_State :: struct {
-    enabled : bool,
-    front : Stencil_Face_State,
-    back : Stencil_Face_State,
-    read_mask : u8,
-    write_mask : u8,
-    ref : u8,
+    enabled:    bool,
+    front:      Stencil_Face_State,
+    back:       Stencil_Face_State,
+    read_mask:  u8,
+    write_mask: u8,
+    ref:        u8,
 }
 
 Depth_State :: struct {
-    pixel_format : Pixel_Format,
-    compare : Compare_Func,
-    write_enabled : bool,
-    bias : f32,
-    bias_slope_scale : f32,
-    bias_clamp : f32,
+    pixel_format:     Pixel_Format,
+    compare:          Compare_Func,
+    write_enabled:    bool,
+    bias:             f32,
+    bias_slope_scale: f32,
+    bias_clamp:       f32,
 }
 
 Blend_State :: struct {
-    enabled : bool,
-    src_factor_rgb : Blend_Factor,
-    dst_factor_rgb : Blend_Factor,
-    op_rgb : Blend_Op,
-    src_factor_alpha : Blend_Factor,
-    dst_factor_alpha : Blend_Factor,
-    op_alpha : Blend_Op,
+    enabled:          bool,
+    src_factor_rgb:   Blend_Factor,
+    dst_factor_rgb:   Blend_Factor,
+    op_rgb:           Blend_Op,
+    src_factor_alpha: Blend_Factor,
+    dst_factor_alpha: Blend_Factor,
+    op_alpha:         Blend_Op,
 }
 
 Color_Target_State :: struct {
-    pixel_format : Pixel_Format,
-    write_mask : Color_Mask,
-    blend : Blend_State,
+    pixel_format: Pixel_Format,
+    write_mask:   Color_Mask,
+    blend:        Blend_State,
 }
 
 Pipeline_Desc :: struct {
-    _ : u32,
-    compute : bool,
-    shader : Shader,
-    layout : Vertex_Layout_State,
-    depth : Depth_State,
-    stencil : Stencil_State,
-    color_count : c.int,
-    colors : [8]Color_Target_State,
-    primitive_type : Primitive_Type,
-    index_type : Index_Type,
-    cull_mode : Cull_Mode,
-    face_winding : Face_Winding,
-    sample_count : c.int,
-    blend_color : Color,
-    alpha_to_coverage_enabled : bool,
-    label : cstring,
-    _ : u32,
+    _:                         u32,
+    compute:                   bool,
+    shader:                    Shader,
+    layout:                    Vertex_Layout_State,
+    depth:                     Depth_State,
+    stencil:                   Stencil_State,
+    color_count:               c.int,
+    colors:                    [8]Color_Target_State,
+    primitive_type:            Primitive_Type,
+    index_type:                Index_Type,
+    cull_mode:                 Cull_Mode,
+    face_winding:              Face_Winding,
+    sample_count:              c.int,
+    blend_color:               Color,
+    alpha_to_coverage_enabled: bool,
+    label:                     cstring,
+    _:                         u32,
 }
 
 /*
@@ -4122,37 +4112,37 @@ Pipeline_Desc :: struct {
         .slice          selects the slice to render into
 */
 Buffer_View_Desc :: struct {
-    buffer : Buffer,
-    offset : c.int,
+    buffer: Buffer,
+    offset: c.int,
 }
 
 Image_View_Desc :: struct {
-    image : Image,
-    mip_level : c.int,
-    slice : c.int,
+    image:     Image,
+    mip_level: c.int,
+    slice:     c.int,
 }
 
 Texture_View_Range :: struct {
-    base : c.int,
-    count : c.int,
+    base:  c.int,
+    count: c.int,
 }
 
 Texture_View_Desc :: struct {
-    image : Image,
-    mip_levels : Texture_View_Range,
-    slices : Texture_View_Range,
+    image:      Image,
+    mip_levels: Texture_View_Range,
+    slices:     Texture_View_Range,
 }
 
 View_Desc :: struct {
-    _ : u32,
-    texture : Texture_View_Desc,
-    storage_buffer : Buffer_View_Desc,
-    storage_image : Image_View_Desc,
-    color_attachment : Image_View_Desc,
-    resolve_attachment : Image_View_Desc,
-    depth_stencil_attachment : Image_View_Desc,
-    label : cstring,
-    _ : u32,
+    _:                        u32,
+    texture:                  Texture_View_Desc,
+    storage_buffer:           Buffer_View_Desc,
+    storage_image:            Image_View_Desc,
+    color_attachment:         Image_View_Desc,
+    resolve_attachment:       Image_View_Desc,
+    depth_stencil_attachment: Image_View_Desc,
+    label:                    cstring,
+    _:                        u32,
 }
 
 /*
@@ -4179,42 +4169,42 @@ View_Desc :: struct {
     sg_query_view_info()
 */
 Slot_Info :: struct {
-    state : Resource_State,
-    res_id : u32,
-    uninit_count : u32,
+    state:        Resource_State,
+    res_id:       u32,
+    uninit_count: u32,
 }
 
 Buffer_Info :: struct {
-    slot : Slot_Info,
-    update_frame_index : u32,
-    append_frame_index : u32,
-    append_pos : c.int,
-    append_overflow : bool,
-    num_slots : c.int,
-    active_slot : c.int,
+    slot:               Slot_Info,
+    update_frame_index: u32,
+    append_frame_index: u32,
+    append_pos:         c.int,
+    append_overflow:    bool,
+    num_slots:          c.int,
+    active_slot:        c.int,
 }
 
 Image_Info :: struct {
-    slot : Slot_Info,
-    upd_frame_index : u32,
-    num_slots : c.int,
-    active_slot : c.int,
+    slot:            Slot_Info,
+    upd_frame_index: u32,
+    num_slots:       c.int,
+    active_slot:     c.int,
 }
 
 Sampler_Info :: struct {
-    slot : Slot_Info,
+    slot: Slot_Info,
 }
 
 Shader_Info :: struct {
-    slot : Slot_Info,
+    slot: Slot_Info,
 }
 
 Pipeline_Info :: struct {
-    slot : Slot_Info,
+    slot: Slot_Info,
 }
 
 View_Info :: struct {
-    slot : Slot_Info,
+    slot: Slot_Info,
 }
 
 /*
@@ -4224,227 +4214,227 @@ View_Info :: struct {
     obtained via sg_query_stats().
 */
 Frame_Stats_Gl :: struct {
-    num_bind_buffer : u32,
-    num_active_texture : u32,
-    num_bind_texture : u32,
-    num_bind_sampler : u32,
-    num_bind_image_texture : u32,
-    num_use_program : u32,
-    num_render_state : u32,
-    num_vertex_attrib_pointer : u32,
-    num_vertex_attrib_divisor : u32,
-    num_enable_vertex_attrib_array : u32,
-    num_disable_vertex_attrib_array : u32,
-    num_uniform : u32,
-    num_memory_barriers : u32,
+    num_bind_buffer:                 u32,
+    num_active_texture:              u32,
+    num_bind_texture:                u32,
+    num_bind_sampler:                u32,
+    num_bind_image_texture:          u32,
+    num_use_program:                 u32,
+    num_render_state:                u32,
+    num_vertex_attrib_pointer:       u32,
+    num_vertex_attrib_divisor:       u32,
+    num_enable_vertex_attrib_array:  u32,
+    num_disable_vertex_attrib_array: u32,
+    num_uniform:                     u32,
+    num_memory_barriers:             u32,
 }
 
 Frame_Stats_D3d11_Pass :: struct {
-    num_om_set_render_targets : u32,
-    num_clear_render_target_view : u32,
-    num_clear_depth_stencil_view : u32,
-    num_resolve_subresource : u32,
+    num_om_set_render_targets:    u32,
+    num_clear_render_target_view: u32,
+    num_clear_depth_stencil_view: u32,
+    num_resolve_subresource:      u32,
 }
 
 Frame_Stats_D3d11_Pipeline :: struct {
-    num_rs_set_state : u32,
-    num_om_set_depth_stencil_state : u32,
-    num_om_set_blend_state : u32,
-    num_ia_set_primitive_topology : u32,
-    num_ia_set_input_layout : u32,
-    num_vs_set_shader : u32,
-    num_vs_set_constant_buffers : u32,
-    num_ps_set_shader : u32,
-    num_ps_set_constant_buffers : u32,
-    num_cs_set_shader : u32,
-    num_cs_set_constant_buffers : u32,
+    num_rs_set_state:               u32,
+    num_om_set_depth_stencil_state: u32,
+    num_om_set_blend_state:         u32,
+    num_ia_set_primitive_topology:  u32,
+    num_ia_set_input_layout:        u32,
+    num_vs_set_shader:              u32,
+    num_vs_set_constant_buffers:    u32,
+    num_ps_set_shader:              u32,
+    num_ps_set_constant_buffers:    u32,
+    num_cs_set_shader:              u32,
+    num_cs_set_constant_buffers:    u32,
 }
 
 Frame_Stats_D3d11_Bindings :: struct {
-    num_ia_set_vertex_buffers : u32,
-    num_ia_set_index_buffer : u32,
-    num_vs_set_shader_resources : u32,
-    num_vs_set_samplers : u32,
-    num_ps_set_shader_resources : u32,
-    num_ps_set_samplers : u32,
-    num_cs_set_shader_resources : u32,
-    num_cs_set_samplers : u32,
-    num_cs_set_unordered_access_views : u32,
+    num_ia_set_vertex_buffers:         u32,
+    num_ia_set_index_buffer:           u32,
+    num_vs_set_shader_resources:       u32,
+    num_vs_set_samplers:               u32,
+    num_ps_set_shader_resources:       u32,
+    num_ps_set_samplers:               u32,
+    num_cs_set_shader_resources:       u32,
+    num_cs_set_samplers:               u32,
+    num_cs_set_unordered_access_views: u32,
 }
 
 Frame_Stats_D3d11_Uniforms :: struct {
-    num_update_subresource : u32,
+    num_update_subresource: u32,
 }
 
 Frame_Stats_D3d11_Draw :: struct {
-    num_draw_indexed_instanced : u32,
-    num_draw_indexed : u32,
-    num_draw_instanced : u32,
-    num_draw : u32,
+    num_draw_indexed_instanced: u32,
+    num_draw_indexed:           u32,
+    num_draw_instanced:         u32,
+    num_draw:                   u32,
 }
 
 Frame_Stats_D3d11 :: struct {
-    pass : Frame_Stats_D3d11_Pass,
-    pipeline : Frame_Stats_D3d11_Pipeline,
-    bindings : Frame_Stats_D3d11_Bindings,
-    uniforms : Frame_Stats_D3d11_Uniforms,
-    draw : Frame_Stats_D3d11_Draw,
-    num_map : u32,
-    num_unmap : u32,
+    pass:      Frame_Stats_D3d11_Pass,
+    pipeline:  Frame_Stats_D3d11_Pipeline,
+    bindings:  Frame_Stats_D3d11_Bindings,
+    uniforms:  Frame_Stats_D3d11_Uniforms,
+    draw:      Frame_Stats_D3d11_Draw,
+    num_map:   u32,
+    num_unmap: u32,
 }
 
 Frame_Stats_Metal_Idpool :: struct {
-    num_added : u32,
-    num_released : u32,
-    num_garbage_collected : u32,
+    num_added:             u32,
+    num_released:          u32,
+    num_garbage_collected: u32,
 }
 
 Frame_Stats_Metal_Pipeline :: struct {
-    num_set_blend_color : u32,
-    num_set_cull_mode : u32,
-    num_set_front_facing_winding : u32,
-    num_set_stencil_reference_value : u32,
-    num_set_depth_bias : u32,
-    num_set_render_pipeline_state : u32,
-    num_set_depth_stencil_state : u32,
+    num_set_blend_color:             u32,
+    num_set_cull_mode:               u32,
+    num_set_front_facing_winding:    u32,
+    num_set_stencil_reference_value: u32,
+    num_set_depth_bias:              u32,
+    num_set_render_pipeline_state:   u32,
+    num_set_depth_stencil_state:     u32,
 }
 
 Frame_Stats_Metal_Bindings :: struct {
-    num_set_vertex_buffer : u32,
-    num_set_vertex_buffer_offset : u32,
-    num_skip_redundant_vertex_buffer : u32,
-    num_set_vertex_texture : u32,
-    num_skip_redundant_vertex_texture : u32,
-    num_set_vertex_sampler_state : u32,
-    num_skip_redundant_vertex_sampler_state : u32,
-    num_set_fragment_buffer : u32,
-    num_set_fragment_buffer_offset : u32,
-    num_skip_redundant_fragment_buffer : u32,
-    num_set_fragment_texture : u32,
-    num_skip_redundant_fragment_texture : u32,
-    num_set_fragment_sampler_state : u32,
-    num_skip_redundant_fragment_sampler_state : u32,
-    num_set_compute_buffer : u32,
-    num_set_compute_buffer_offset : u32,
-    num_skip_redundant_compute_buffer : u32,
-    num_set_compute_texture : u32,
-    num_skip_redundant_compute_texture : u32,
-    num_set_compute_sampler_state : u32,
-    num_skip_redundant_compute_sampler_state : u32,
+    num_set_vertex_buffer:                     u32,
+    num_set_vertex_buffer_offset:              u32,
+    num_skip_redundant_vertex_buffer:          u32,
+    num_set_vertex_texture:                    u32,
+    num_skip_redundant_vertex_texture:         u32,
+    num_set_vertex_sampler_state:              u32,
+    num_skip_redundant_vertex_sampler_state:   u32,
+    num_set_fragment_buffer:                   u32,
+    num_set_fragment_buffer_offset:            u32,
+    num_skip_redundant_fragment_buffer:        u32,
+    num_set_fragment_texture:                  u32,
+    num_skip_redundant_fragment_texture:       u32,
+    num_set_fragment_sampler_state:            u32,
+    num_skip_redundant_fragment_sampler_state: u32,
+    num_set_compute_buffer:                    u32,
+    num_set_compute_buffer_offset:             u32,
+    num_skip_redundant_compute_buffer:         u32,
+    num_set_compute_texture:                   u32,
+    num_skip_redundant_compute_texture:        u32,
+    num_set_compute_sampler_state:             u32,
+    num_skip_redundant_compute_sampler_state:  u32,
 }
 
 Frame_Stats_Metal_Uniforms :: struct {
-    num_set_vertex_buffer_offset : u32,
-    num_set_fragment_buffer_offset : u32,
-    num_set_compute_buffer_offset : u32,
+    num_set_vertex_buffer_offset:   u32,
+    num_set_fragment_buffer_offset: u32,
+    num_set_compute_buffer_offset:  u32,
 }
 
 Frame_Stats_Metal :: struct {
-    idpool : Frame_Stats_Metal_Idpool,
-    pipeline : Frame_Stats_Metal_Pipeline,
-    bindings : Frame_Stats_Metal_Bindings,
-    uniforms : Frame_Stats_Metal_Uniforms,
+    idpool:   Frame_Stats_Metal_Idpool,
+    pipeline: Frame_Stats_Metal_Pipeline,
+    bindings: Frame_Stats_Metal_Bindings,
+    uniforms: Frame_Stats_Metal_Uniforms,
 }
 
 Frame_Stats_Wgpu_Uniforms :: struct {
-    num_set_bindgroup : u32,
-    size_write_buffer : u32,
+    num_set_bindgroup: u32,
+    size_write_buffer: u32,
 }
 
 Frame_Stats_Wgpu_Bindings :: struct {
-    num_set_vertex_buffer : u32,
-    num_skip_redundant_vertex_buffer : u32,
-    num_set_index_buffer : u32,
-    num_skip_redundant_index_buffer : u32,
-    num_create_bindgroup : u32,
-    num_discard_bindgroup : u32,
-    num_set_bindgroup : u32,
-    num_skip_redundant_bindgroup : u32,
-    num_bindgroup_cache_hits : u32,
-    num_bindgroup_cache_misses : u32,
-    num_bindgroup_cache_collisions : u32,
-    num_bindgroup_cache_invalidates : u32,
-    num_bindgroup_cache_hash_vs_key_mismatch : u32,
+    num_set_vertex_buffer:                    u32,
+    num_skip_redundant_vertex_buffer:         u32,
+    num_set_index_buffer:                     u32,
+    num_skip_redundant_index_buffer:          u32,
+    num_create_bindgroup:                     u32,
+    num_discard_bindgroup:                    u32,
+    num_set_bindgroup:                        u32,
+    num_skip_redundant_bindgroup:             u32,
+    num_bindgroup_cache_hits:                 u32,
+    num_bindgroup_cache_misses:               u32,
+    num_bindgroup_cache_collisions:           u32,
+    num_bindgroup_cache_invalidates:          u32,
+    num_bindgroup_cache_hash_vs_key_mismatch: u32,
 }
 
 Frame_Stats_Wgpu :: struct {
-    uniforms : Frame_Stats_Wgpu_Uniforms,
-    bindings : Frame_Stats_Wgpu_Bindings,
+    uniforms: Frame_Stats_Wgpu_Uniforms,
+    bindings: Frame_Stats_Wgpu_Bindings,
 }
 
 Frame_Stats_Vk :: struct {
-    num_cmd_pipeline_barrier : u32,
-    num_allocate_memory : u32,
-    num_free_memory : u32,
-    size_allocate_memory : u32,
-    num_delete_queue_added : u32,
-    num_delete_queue_collected : u32,
-    num_cmd_copy_buffer : u32,
-    num_cmd_copy_buffer_to_image : u32,
-    num_cmd_set_descriptor_buffer_offsets : u32,
-    size_descriptor_buffer_writes : u32,
+    num_cmd_pipeline_barrier:              u32,
+    num_allocate_memory:                   u32,
+    num_free_memory:                       u32,
+    size_allocate_memory:                  u32,
+    num_delete_queue_added:                u32,
+    num_delete_queue_collected:            u32,
+    num_cmd_copy_buffer:                   u32,
+    num_cmd_copy_buffer_to_image:          u32,
+    num_cmd_set_descriptor_buffer_offsets: u32,
+    size_descriptor_buffer_writes:         u32,
 }
 
 Frame_Resource_Stats :: struct {
-    allocated : u32,
-    deallocated : u32,
-    inited : u32,
-    uninited : u32,
+    allocated:   u32,
+    deallocated: u32,
+    inited:      u32,
+    uninited:    u32,
 }
 
 Total_Resource_Stats :: struct {
-    alive : u32,
-    free : u32,
-    allocated : u32,
-    deallocated : u32,
-    inited : u32,
-    uninited : u32,
+    alive:       u32,
+    free:        u32,
+    allocated:   u32,
+    deallocated: u32,
+    inited:      u32,
+    uninited:    u32,
 }
 
 Total_Stats :: struct {
-    buffers : Total_Resource_Stats,
-    images : Total_Resource_Stats,
-    samplers : Total_Resource_Stats,
-    views : Total_Resource_Stats,
-    shaders : Total_Resource_Stats,
-    pipelines : Total_Resource_Stats,
+    buffers:   Total_Resource_Stats,
+    images:    Total_Resource_Stats,
+    samplers:  Total_Resource_Stats,
+    views:     Total_Resource_Stats,
+    shaders:   Total_Resource_Stats,
+    pipelines: Total_Resource_Stats,
 }
 
 Frame_Stats :: struct {
-    frame_index : u32,
-    num_passes : u32,
-    num_apply_viewport : u32,
-    num_apply_scissor_rect : u32,
-    num_apply_pipeline : u32,
-    num_apply_bindings : u32,
-    num_apply_uniforms : u32,
-    num_draw : u32,
-    num_draw_ex : u32,
-    num_dispatch : u32,
-    num_update_buffer : u32,
-    num_append_buffer : u32,
-    num_update_image : u32,
-    size_apply_uniforms : u32,
-    size_update_buffer : u32,
-    size_append_buffer : u32,
-    size_update_image : u32,
-    buffers : Frame_Resource_Stats,
-    images : Frame_Resource_Stats,
-    samplers : Frame_Resource_Stats,
-    views : Frame_Resource_Stats,
-    shaders : Frame_Resource_Stats,
-    pipelines : Frame_Resource_Stats,
-    gl : Frame_Stats_Gl,
-    d3d11 : Frame_Stats_D3d11,
-    metal : Frame_Stats_Metal,
-    wgpu : Frame_Stats_Wgpu,
-    vk : Frame_Stats_Vk,
+    frame_index:            u32,
+    num_passes:             u32,
+    num_apply_viewport:     u32,
+    num_apply_scissor_rect: u32,
+    num_apply_pipeline:     u32,
+    num_apply_bindings:     u32,
+    num_apply_uniforms:     u32,
+    num_draw:               u32,
+    num_draw_ex:            u32,
+    num_dispatch:           u32,
+    num_update_buffer:      u32,
+    num_append_buffer:      u32,
+    num_update_image:       u32,
+    size_apply_uniforms:    u32,
+    size_update_buffer:     u32,
+    size_append_buffer:     u32,
+    size_update_image:      u32,
+    buffers:                Frame_Resource_Stats,
+    images:                 Frame_Resource_Stats,
+    samplers:               Frame_Resource_Stats,
+    views:                  Frame_Resource_Stats,
+    shaders:                Frame_Resource_Stats,
+    pipelines:              Frame_Resource_Stats,
+    gl:                     Frame_Stats_Gl,
+    d3d11:                  Frame_Stats_D3d11,
+    metal:                  Frame_Stats_Metal,
+    wgpu:                   Frame_Stats_Wgpu,
+    vk:                     Frame_Stats_Vk,
 }
 
 Stats :: struct {
-    prev_frame : Frame_Stats,
-    cur_frame : Frame_Stats,
-    total : Total_Stats,
+    prev_frame: Frame_Stats,
+    cur_frame:  Frame_Stats,
+    total:      Total_Stats,
 }
 
 Log_Item :: enum i32 {
@@ -5026,37 +5016,37 @@ Log_Item :: enum i32 {
     provided by sokol_app.h.
 */
 Environment_Defaults :: struct {
-    color_format : Pixel_Format,
-    depth_format : Pixel_Format,
-    sample_count : c.int,
+    color_format: Pixel_Format,
+    depth_format: Pixel_Format,
+    sample_count: c.int,
 }
 
 Metal_Environment :: struct {
-    device : rawptr,
+    device: rawptr,
 }
 
 D3d11_Environment :: struct {
-    device : rawptr,
-    device_context : rawptr,
+    device:         rawptr,
+    device_context: rawptr,
 }
 
 Wgpu_Environment :: struct {
-    device : rawptr,
+    device: rawptr,
 }
 
 Vulkan_Environment :: struct {
-    physical_device : rawptr,
-    device : rawptr,
-    queue : rawptr,
-    queue_family_index : u32,
+    physical_device:    rawptr,
+    device:             rawptr,
+    queue:              rawptr,
+    queue_family_index: u32,
 }
 
 Environment :: struct {
-    defaults : Environment_Defaults,
-    metal : Metal_Environment,
-    d3d11 : D3d11_Environment,
-    wgpu : Wgpu_Environment,
-    vulkan : Vulkan_Environment,
+    defaults: Environment_Defaults,
+    metal:    Metal_Environment,
+    d3d11:    D3d11_Environment,
+    wgpu:     Wgpu_Environment,
+    vulkan:   Vulkan_Environment,
 }
 
 /*
@@ -5069,8 +5059,8 @@ Environment :: struct {
     function.
 */
 Commit_Listener :: struct {
-    func : proc "c" (a0: rawptr),
-    user_data : rawptr,
+    func:      proc "c" (a0: rawptr),
+    user_data: rawptr,
 }
 
 /*
@@ -5082,9 +5072,9 @@ Commit_Listener :: struct {
     override one function but not the other).
 */
 Allocator :: struct {
-    alloc_fn : proc "c" (a0: c.size_t, a1: rawptr) -> rawptr,
-    free_fn : proc "c" (a0: rawptr, a1: rawptr),
-    user_data : rawptr,
+    alloc_fn:  proc "c" (a0: c.size_t, a1: rawptr) -> rawptr,
+    free_fn:   proc "c" (a0: rawptr, a1: rawptr),
+    user_data: rawptr,
 }
 
 /*
@@ -5099,50 +5089,50 @@ Allocator :: struct {
     (for instance the standard logging function from sokol_log.h).
 */
 Logger :: struct {
-    func : proc "c" (a0: cstring, a1: u32, a2: u32, a3: cstring, a4: u32, a5: cstring, a6: rawptr),
-    user_data : rawptr,
+    func:      proc "c" (a0: cstring, a1: u32, a2: u32, a3: cstring, a4: u32, a5: cstring, a6: rawptr),
+    user_data: rawptr,
 }
 
 D3d11_Desc :: struct {
-    shader_debugging : bool,
+    shader_debugging: bool,
 }
 
 Metal_Desc :: struct {
-    force_managed_storage_mode : bool,
-    use_command_buffer_with_retained_references : bool,
+    force_managed_storage_mode:                  bool,
+    use_command_buffer_with_retained_references: bool,
 }
 
 Wgpu_Desc :: struct {
-    disable_bindgroups_cache : bool,
-    bindgroups_cache_size : c.int,
+    disable_bindgroups_cache: bool,
+    bindgroups_cache_size:    c.int,
 }
 
 Vulkan_Desc :: struct {
-    copy_staging_buffer_size : c.int,
-    stream_staging_buffer_size : c.int,
-    descriptor_buffer_size : c.int,
+    copy_staging_buffer_size:   c.int,
+    stream_staging_buffer_size: c.int,
+    descriptor_buffer_size:     c.int,
 }
 
 Desc :: struct {
-    _ : u32,
-    buffer_pool_size : c.int,
-    image_pool_size : c.int,
-    sampler_pool_size : c.int,
-    shader_pool_size : c.int,
-    pipeline_pool_size : c.int,
-    view_pool_size : c.int,
-    uniform_buffer_size : c.int,
-    max_commit_listeners : c.int,
-    disable_validation : bool,
-    enforce_portable_limits : bool,
-    d3d11 : D3d11_Desc,
-    metal : Metal_Desc,
-    wgpu : Wgpu_Desc,
-    vulkan : Vulkan_Desc,
-    allocator : Allocator,
-    logger : Logger,
-    environment : Environment,
-    _ : u32,
+    _:                       u32,
+    buffer_pool_size:        c.int,
+    image_pool_size:         c.int,
+    sampler_pool_size:       c.int,
+    shader_pool_size:        c.int,
+    pipeline_pool_size:      c.int,
+    view_pool_size:          c.int,
+    uniform_buffer_size:     c.int,
+    max_commit_listeners:    c.int,
+    disable_validation:      bool,
+    enforce_portable_limits: bool,
+    d3d11:                   D3d11_Desc,
+    metal:                   Metal_Desc,
+    wgpu:                    Wgpu_Desc,
+    vulkan:                  Vulkan_Desc,
+    allocator:               Allocator,
+    logger:                  Logger,
+    environment:             Environment,
+    _:                       u32,
 }
 
 /*
@@ -5152,113 +5142,113 @@ Desc :: struct {
       This group of functions will be expanded as needed.
 */
 D3d11_Buffer_Info :: struct {
-    buf : rawptr,
+    buf: rawptr,
 }
 
 D3d11_Image_Info :: struct {
-    tex2d : rawptr,
-    tex3d : rawptr,
-    res : rawptr,
+    tex2d: rawptr,
+    tex3d: rawptr,
+    res:   rawptr,
 }
 
 D3d11_Sampler_Info :: struct {
-    smp : rawptr,
+    smp: rawptr,
 }
 
 D3d11_Shader_Info :: struct {
-    cbufs : [8]rawptr,
-    vs : rawptr,
-    fs : rawptr,
+    cbufs: [8]rawptr,
+    vs:    rawptr,
+    fs:    rawptr,
 }
 
 D3d11_Pipeline_Info :: struct {
-    il : rawptr,
-    rs : rawptr,
-    dss : rawptr,
-    bs : rawptr,
+    il:  rawptr,
+    rs:  rawptr,
+    dss: rawptr,
+    bs:  rawptr,
 }
 
 D3d11_View_Info :: struct {
-    srv : rawptr,
-    uav : rawptr,
-    rtv : rawptr,
-    dsv : rawptr,
+    srv: rawptr,
+    uav: rawptr,
+    rtv: rawptr,
+    dsv: rawptr,
 }
 
 Mtl_Buffer_Info :: struct {
-    buf : [2]rawptr,
-    active_slot : c.int,
+    buf:         [2]rawptr,
+    active_slot: c.int,
 }
 
 Mtl_Image_Info :: struct {
-    tex : [2]rawptr,
-    active_slot : c.int,
+    tex:         [2]rawptr,
+    active_slot: c.int,
 }
 
 Mtl_Sampler_Info :: struct {
-    smp : rawptr,
+    smp: rawptr,
 }
 
 Mtl_Shader_Info :: struct {
-    vertex_lib : rawptr,
-    fragment_lib : rawptr,
-    vertex_func : rawptr,
-    fragment_func : rawptr,
+    vertex_lib:    rawptr,
+    fragment_lib:  rawptr,
+    vertex_func:   rawptr,
+    fragment_func: rawptr,
 }
 
 Mtl_Pipeline_Info :: struct {
-    rps : rawptr,
-    dss : rawptr,
+    rps: rawptr,
+    dss: rawptr,
 }
 
 Wgpu_Buffer_Info :: struct {
-    buf : rawptr,
+    buf: rawptr,
 }
 
 Wgpu_Image_Info :: struct {
-    tex : rawptr,
+    tex: rawptr,
 }
 
 Wgpu_Sampler_Info :: struct {
-    smp : rawptr,
+    smp: rawptr,
 }
 
 Wgpu_Shader_Info :: struct {
-    vs_mod : rawptr,
-    fs_mod : rawptr,
-    bgl : rawptr,
+    vs_mod: rawptr,
+    fs_mod: rawptr,
+    bgl:    rawptr,
 }
 
 Wgpu_Pipeline_Info :: struct {
-    render_pipeline : rawptr,
-    compute_pipeline : rawptr,
+    render_pipeline:  rawptr,
+    compute_pipeline: rawptr,
 }
 
 Wgpu_View_Info :: struct {
-    view : rawptr,
+    view: rawptr,
 }
 
 Gl_Buffer_Info :: struct {
-    buf : [2]u32,
-    active_slot : c.int,
+    buf:         [2]u32,
+    active_slot: c.int,
 }
 
 Gl_Image_Info :: struct {
-    tex : [2]u32,
-    tex_target : u32,
-    active_slot : c.int,
+    tex:         [2]u32,
+    tex_target:  u32,
+    active_slot: c.int,
 }
 
 Gl_Sampler_Info :: struct {
-    smp : u32,
+    smp: u32,
 }
 
 Gl_Shader_Info :: struct {
-    prog : u32,
+    prog: u32,
 }
 
 Gl_View_Info :: struct {
-    tex_view : [2]u32,
-    msaa_render_buffer : u32,
-    msaa_resolve_frame_buffer : u32,
+    tex_view:                  [2]u32,
+    msaa_render_buffer:        u32,
+    msaa_resolve_frame_buffer: u32,
 }

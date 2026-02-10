@@ -48,4 +48,10 @@ build_lib_x64_debug sokol_debugtext     debugtext/sokol_debugtext_linux_x64_gl_d
 build_lib_x64_debug sokol_shape         shape/sokol_shape_linux_x64_gl_debug SOKOL_GLCORE
 build_lib_x64_debug sokol_gl            gl/sokol_gl_linux_x64_gl_debug SOKOL_GLCORE
 
+# x64 + Vulkan + Release
+build_lib_x64_release sokol_gfx         gfx/sokol_gfx_linux_x64_vulkan_release SOKOL_VULKAN "-lvulkan"
+
+# x64 + Vulkan + Debug
+build_lib_x64_debug sokol_gfx           gfx/sokol_gfx_linux_x64_vulkan_debug SOKOL_VULKAN "-lvulkan"
+
 rm *.o

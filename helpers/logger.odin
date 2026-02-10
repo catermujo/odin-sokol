@@ -41,7 +41,7 @@ logger_proc :: proc "c" (
         file_path = string(filename),
         line      = i32(line_nr),
     }
-    
+
     level: log.Level
     switch log_level {
     case 0:

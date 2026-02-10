@@ -3033,4 +3033,3 @@ vertexpull_shader_desc :: proc "c" (backend: sg.Backend) -> sg.Shader_Desc {
     }
     return desc
 }
-

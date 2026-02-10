@@ -213,4 +213,3 @@ draw_fallback :: proc() {
     sg.end_pass()
     sg.commit()
 }
-
