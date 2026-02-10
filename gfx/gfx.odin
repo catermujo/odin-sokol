@@ -1969,6 +1969,7 @@ SOKOL_DEBUG :: #config(SOKOL_DEBUG, ODIN_DEBUG)
 
 DEBUG :: #config(SOKOL_GFX_DEBUG, SOKOL_DEBUG)
 USE_GL :: #config(SOKOL_USE_GL, false)
+USE_VULKAN :: #config(SOKOL_USE_VULKAN, false)
 USE_DLL :: #config(SOKOL_DLL, false)
 
 when ODIN_OS == .Windows {
@@ -2005,10 +2006,18 @@ when ODIN_OS == .Windows {
         }
     }
 } else when ODIN_OS == .Linux {
-    when USE_DLL {
-        when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_debug.so", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_release.so", "system:GL", "system:dl", "system:pthread"} }
+    when USE_VULKAN {
+        when USE_DLL {
+            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_debug.so", "system:vulkan", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_release.so", "system:vulkan", "system:dl", "system:pthread"} }
+        } else {
+            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_debug.a", "system:vulkan", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_release.a", "system:vulkan", "system:dl", "system:pthread"} }
+        }
     } else {
-        when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_debug.a", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_release.a", "system:GL", "system:dl", "system:pthread"} }
+        when USE_DLL {
+            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_debug.so", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_release.so", "system:GL", "system:dl", "system:pthread"} }
+        } else {
+            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_debug.a", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_release.a", "system:GL", "system:dl", "system:pthread"} }
+        }
     }
 } else when ODIN_ARCH == .wasm32 || ODIN_ARCH == .wasm64p32 {
     // Feed sokol_gfx_wasm_gl_debug.a or sokol_gfx_wasm_gl_release.a into emscripten compiler.
@@ -2167,6 +2176,8 @@ foreign sokol_gfx_clib {
     d3d11_query_view_info :: proc(view: View) -> D3d11_View_Info ---
     // Metal: return __bridge-casted MTLDevice
     mtl_device :: proc() -> rawptr ---
+    // Metal: return __bridge-casted current frame MTLCommandBuffer
+    mtl_command_buffer :: proc() -> rawptr ---
     // Metal: return __bridge-casted MTLRenderCommandEncoder when inside render pass (otherwise zero)
     mtl_render_command_encoder :: proc() -> rawptr ---
     // Metal: return __bridge-casted MTLComputeCommandEncoder when inside compute pass (otherwise zero)
@@ -2297,12 +2308,7 @@ MAX_PORTABLE_STORAGEIMAGE_BINDINGS_PER_STAGE :: 4
 
     An RGBA color value.
 */
-Color :: struct {
-    r: f32,
-    g: f32,
-    b: f32,
-    a: f32,
-}
+Color :: [4]f32
 
 /*
     sg_backend

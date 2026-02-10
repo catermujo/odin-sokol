@@ -24,6 +24,7 @@ extern "C" {
 SOKOL_GFX_API_DECL void sg_query_image_pixels(sg_image img_id, void* pixels, int size);
 SOKOL_GFX_API_DECL void sg_query_pixels(int x, int y, int w, int h, bool origin_top_left, void* pixels, int size);
 SOKOL_GFX_API_DECL void sg_update_texture_filter(sg_image img_id, sg_filter min_filter, sg_filter mag_filter);
+SOKOL_GFX_API_DECL const void* sg_mtl_command_buffer(void);
 
 #ifdef __cplusplus
 } // extern "C"
@@ -263,6 +264,14 @@ void sg_update_texture_filter(sg_image img_id, sg_filter min_filter, sg_filter m
 #else
     _SOKOL_UNUSED(min_filter);
     _SOKOL_UNUSED(mag_filter);
+#endif
+}
+
+const void* sg_mtl_command_buffer(void) {
+#if defined(SOKOL_METAL)
+    return (__bridge const void*) _sg.mtl.cmd_buffer;
+#else
+    return 0;
 #endif
 }
 
