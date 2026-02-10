@@ -10,22 +10,22 @@ package sokol_math
 import "core:math"
 
 TAU :: 6.28318530717958647692528676655900576
-PI  :: 3.14159265358979323846264338327950288
+PI :: 3.14159265358979323846264338327950288
 
 vec2 :: distinct [2]f32
 vec3 :: distinct [3]f32
 mat4 :: distinct [4][4]f32
 
-radians :: proc (degrees: f32) -> f32 { return degrees * TAU / 360.0 }
+radians :: proc(degrees: f32) -> f32 { return degrees * TAU / 360.0 }
 
-up :: proc () -> vec3 { return { 0.0, 1.0, 0.0 } }
+up :: proc() -> vec3 { return {0.0, 1.0, 0.0} }
 
-dot :: proc{
+dot :: proc {
     dot_vec3,
 }
-dot_vec3 :: proc(v0, v1: vec3) -> f32 { return v0.x*v1.x + v0.y*v1.y + v0.z*v1.z }
+dot_vec3 :: proc(v0, v1: vec3) -> f32 { return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z }
 
-len :: proc{
+len :: proc {
     len_vec3,
 }
 len_vec3 :: proc(v: vec3) -> f32 { return math.sqrt(dot(v, v)) }
@@ -36,7 +36,7 @@ norm :: proc {
 norm_vec3 :: proc(v: vec3) -> vec3 {
     l := len(v)
     if (l != 0) {
-        return { v.x/l, v.y/l, v.z/l }
+        return {v.x / l, v.y / l, v.z / l}
     } else {
         return {}
     }
@@ -46,18 +46,14 @@ cross :: proc {
     cross_vec3,
 }
 cross_vec3 :: proc(v0, v1: vec3) -> vec3 {
-    return {
-        (v0.y * v1.z) - (v0.z * v1.y),
-        (v0.z * v1.x) - (v0.x * v1.z),
-        (v0.x * v1.y) - (v0.y * v1.x),
-    }
+    return {(v0.y * v1.z) - (v0.z * v1.y), (v0.z * v1.x) - (v0.x * v1.z), (v0.x * v1.y) - (v0.y * v1.x)}
 }
 
 identity :: proc {
     identity_mat4,
 }
 identity_mat4 :: proc() -> mat4 {
-    m : mat4 = {}
+    m: mat4 = {}
     m[0][0] = 1.0
     m[1][1] = 1.0
     m[2][2] = 1.0
@@ -84,7 +80,7 @@ lookat :: proc {
     lookat_mat4,
 }
 lookat_mat4 :: proc(eye, center, up: vec3) -> mat4 {
-    m := mat4 {}
+    m := mat4{}
     f := norm(center - eye)
     s := norm(cross(f, up))
     u := cross(s, f)
@@ -109,10 +105,10 @@ lookat_mat4 :: proc(eye, center, up: vec3) -> mat4 {
     return m
 }
 
-rotate :: proc{
+rotate :: proc {
     rotate_mat4,
 }
-rotate_mat4 :: proc (angle: f32, axis_unorm: vec3) -> mat4 {
+rotate_mat4 :: proc(angle: f32, axis_unorm: vec3) -> mat4 {
     m := identity()
 
     axis := norm(axis_unorm)
@@ -133,10 +129,10 @@ rotate_mat4 :: proc (angle: f32, axis_unorm: vec3) -> mat4 {
     return m
 }
 
-translate :: proc{
+translate :: proc {
     translate_mat4,
 }
-translate_mat4 :: proc (translation: vec3) -> mat4 {
+translate_mat4 :: proc(translation: vec3) -> mat4 {
     m := identity()
     m[3][0] = translation.x
     m[3][1] = translation.y
@@ -144,17 +140,18 @@ translate_mat4 :: proc (translation: vec3) -> mat4 {
     return m
 }
 
-mul :: proc{
+mul :: proc {
     mul_mat4,
 }
-mul_mat4 :: proc (left, right: mat4) -> mat4 {
-    m := mat4 {}
-    for col in 0..<4 {
-        for row in 0..<4 {
-            m[col][row] = left[0][row] * right[col][0] +
-                          left[1][row] * right[col][1] +
-                          left[2][row] * right[col][2] +
-                          left[3][row] * right[col][3]
+mul_mat4 :: proc(left, right: mat4) -> mat4 {
+    m := mat4{}
+    for col in 0 ..< 4 {
+        for row in 0 ..< 4 {
+            m[col][row] =
+                left[0][row] * right[col][0] +
+                left[1][row] * right[col][1] +
+                left[2][row] * right[col][2] +
+                left[3][row] * right[col][3]
         }
     }
     return m
