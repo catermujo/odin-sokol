@@ -1,4 +1,4 @@
-set -e
+set -ex
 
 FRAMEWORKS_METAL="-framework Metal -framework MetalKit"
 FRAMEWORKS_OPENGL="-framework OpenGL"
@@ -17,7 +17,9 @@ build_lib_release() {
     fi
     echo $dst
     MACOSX_DEPLOYMENT_TARGET=10.13 clang -c -O2 -x objective-c -arch $arch -DNDEBUG -DIMPL -D$backend c/$src.c
-    clang -dynamiclib -arch $arch $FRAMEWORKS_CORE $frameworks -o $dst.dylib $src.o $dep
+    clang -dynamiclib -arch $arch $FRAMEWORKS_CORE $frameworks \
+        -install_name $(basename $dst).dylib \
+        -o $dst.dylib $src.o $dep
 }
 
 build_lib_debug() {
@@ -33,18 +35,20 @@ build_lib_debug() {
     fi
     echo $dst
     MACOSX_DEPLOYMENT_TARGET=10.13 clang -c -g -x objective-c -arch $arch -DIMPL -D$backend c/$src.c
-    clang -dynamiclib -arch $arch $FRAMEWORKS_CORE $frameworks -o $dst.dylib $src.o $dep
+    clang -dynamiclib -arch $arch $FRAMEWORKS_CORE $frameworks \
+        -install_name $(basename $dst).dylib \
+        -o $dst.dylib $src.o $dep
 }
 
 mkdir -p dylib
 
-build_lib_release sokol dylib/sokol_dylib_macos_arm64_metal_release SOKOL_METAL    arm64
-build_lib_debug   sokol dylib/sokol_dylib_macos_arm64_metal_debug   SOKOL_METAL    arm64
-build_lib_release sokol dylib/sokol_dylib_macos_x64_metal_release   SOKOL_METAL    x86_64
-build_lib_debug   sokol dylib/sokol_dylib_macos_x64_metal_debug     SOKOL_METAL    x86_64
-build_lib_release sokol dylib/sokol_dylib_macos_arm64_gl_release    SOKOL_GLCORE arm64
-build_lib_debug   sokol dylib/sokol_dylib_macos_arm64_gl_debug      SOKOL_GLCORE arm64
-build_lib_release sokol dylib/sokol_dylib_macos_x64_gl_release      SOKOL_GLCORE x86_64
-build_lib_debug   sokol dylib/sokol_dylib_macos_x64_gl_debug        SOKOL_GLCORE x86_64
+build_lib_release sokol dylib/sokol_dylib_macos_arm64_metal_release SOKOL_METAL arm64
+build_lib_debug sokol dylib/sokol_dylib_macos_arm64_metal_debug SOKOL_METAL arm64
+build_lib_release sokol dylib/sokol_dylib_macos_x64_metal_release SOKOL_METAL x86_64
+build_lib_debug sokol dylib/sokol_dylib_macos_x64_metal_debug SOKOL_METAL x86_64
+build_lib_release sokol dylib/sokol_dylib_macos_arm64_gl_release SOKOL_GLCORE arm64
+build_lib_debug sokol dylib/sokol_dylib_macos_arm64_gl_debug SOKOL_GLCORE arm64
+build_lib_release sokol dylib/sokol_dylib_macos_x64_gl_release SOKOL_GLCORE x86_64
+build_lib_debug sokol dylib/sokol_dylib_macos_x64_gl_debug SOKOL_GLCORE x86_64
 
 rm *.o
