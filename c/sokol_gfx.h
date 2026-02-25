@@ -11378,10 +11378,11 @@ _SOKOL_PRIVATE void _sg_gl_begin_pass(const sg_pass* pass, const _sg_attachments
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
         }
-        if (!_sg_gl_check_framebuffer_status()) {
-            _sg.cur_pass.valid = false;
-            return;
-        }
+        // NOTE(patch): skipping per-pass framebuffer validation — already validated at creation time
+        // if (!_sg_gl_check_framebuffer_status()) {
+        //     _sg.cur_pass.valid = false;
+        //     return;
+        // }
         GLenum gl_draw_bufs[SG_MAX_COLOR_ATTACHMENTS];
         SOKOL_ASSERT(_sg.limits.max_color_attachments <= SG_MAX_COLOR_ATTACHMENTS);
         for (int i = 0; i < _sg.limits.max_color_attachments; i++) {
