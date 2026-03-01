@@ -1,6 +1,5 @@
 .vscode/
 build/
-*.a
 *.o
 *.lib
 *.obj
@@ -8,8 +7,6 @@ build/
 *.bin
 *.exp
 *.ilk
-*.dll
-*.dylib
 *.exe
 *.dSYM/
 ols.json
