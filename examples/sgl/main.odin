@@ -5,80 +5,58 @@
 //------------------------------------------------------------------------------
 package main
 
+import sapp "../../app"
+import sg "../../gfx"
+import sgl "../../gl"
+import sglue "../../glue"
+import slog "../../log"
 import "base:runtime"
 import "core:math"
-import slog "../../sokol/log"
-import sg "../../sokol/gfx"
-import sapp "../../sokol/app"
-import sglue "../../sokol/glue"
-import sgl "../../sokol/gl"
 
 state: struct {
     pass_action: sg.Pass_Action,
-    tex_view: sg.View,
-    smp: sg.Sampler,
-    pip_3d: sgl.Pipeline,
+    tex_view:    sg.View,
+    smp:         sg.Sampler,
+    pip_3d:      sgl.Pipeline,
 } = {
-    pass_action = {
-        colors = { 0 = { load_action = .CLEAR, clear_value = { 0.0, 0.0, 0.0, 1.0 } } },
-    },
+    pass_action = {colors = {0 = {load_action = .CLEAR, clear_value = {0.0, 0.0, 0.0, 1.0}}}},
 }
 
 init :: proc "c" () {
     context = runtime.default_context()
-    sg.setup({
-        environment = sglue.environment(),
-        logger = { func = slog.func },
-    })
-    sgl.setup({
-        logger = { func = slog.func },
-    })
+    sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
+    sgl.setup({logger = {func = slog.func}})
 
     // a checkerboard image and texture view
     pixels: [8][8]u32
-    for y in 0..<8 {
-        for x in 0..<8 {
+    for y in 0 ..< 8 {
+        for x in 0 ..< 8 {
             pixels[y][x] = (((y ~ x) & 1) == 0) ? 0xFF_00_00_00 : 0xFF_FF_FF_FF
         }
     }
-    img := sg.make_image({
-        width = 8,
-        height = 8,
-        data = {
-            mip_levels = { 0 = { ptr = &pixels, size = size_of(pixels) } },
-        },
-    })
-    state.tex_view = sg.make_view({ texture = { image = img } })
+    img := sg.make_image({width = 8, height = 8, data = {mip_levels = {0 = {ptr = &pixels, size = size_of(pixels)}}}})
+    state.tex_view = sg.make_view({texture = {image = img}})
 
     // a sampler to sample the above texture
-    state.smp = sg.make_sampler({
-        min_filter = .NEAREST,
-        mag_filter = .NEAREST,
-    })
+    state.smp = sg.make_sampler({min_filter = .NEAREST, mag_filter = .NEAREST})
 
     // create a pipeline object for 3d rendering, with less-equal
     // depth-test and cull-face enabled, note that we don't provide
     // a shader, vertex-layout, pixel formats and sample count here,
     // these are all filled in by sokol/gl
-    state.pip_3d = sgl.make_pipeline({
-        cull_mode = .BACK,
-        depth = {
-            write_enabled = true,
-            compare = .LESS_EQUAL,
-        },
-    })
+    state.pip_3d = sgl.make_pipeline({cull_mode = .BACK, depth = {write_enabled = true, compare = .LESS_EQUAL}})
 }
 
-draw_triangle :: proc () {
+draw_triangle :: proc() {
     sgl.defaults()
     sgl.begin_triangles()
-    sgl.v2f_c3b( 0.0,  0.5, 255, 0, 0)
+    sgl.v2f_c3b(0.0, 0.5, 255, 0, 0)
     sgl.v2f_c3b(-0.5, -0.5, 0, 0, 255)
-    sgl.v2f_c3b( 0.5, -0.5, 0, 255, 0)
+    sgl.v2f_c3b(0.5, -0.5, 0, 255, 0)
     sgl.end()
 }
 
-draw_quad :: proc (t: f32) {
+draw_quad :: proc(t: f32) {
     @(static) angle_deg: f32 = 0.0
     scale := 1.0 + math.sin(sgl.rad(angle_deg)) * 0.5
     angle_deg += 1.0 * t
@@ -86,50 +64,50 @@ draw_quad :: proc (t: f32) {
     sgl.rotate(sgl.rad(angle_deg), 0.0, 0.0, 1.0)
     sgl.scale(scale, scale, 1.0)
     sgl.begin_quads()
-    sgl.v2f_c3b( -0.5, -0.5,  255, 255, 0)
-    sgl.v2f_c3b(  0.5, -0.5,  0, 255, 0)
-    sgl.v2f_c3b(  0.5,  0.5,  0, 0, 255)
-    sgl.v2f_c3b( -0.5,  0.5,  255, 0, 0)
+    sgl.v2f_c3b(-0.5, -0.5, 255, 255, 0)
+    sgl.v2f_c3b(0.5, -0.5, 0, 255, 0)
+    sgl.v2f_c3b(0.5, 0.5, 0, 0, 255)
+    sgl.v2f_c3b(-0.5, 0.5, 255, 0, 0)
     sgl.end()
 }
 
 // vertex specification for a cube with colored sides and texture coords
-cube :: proc () {
+cube :: proc() {
     sgl.begin_quads()
     sgl.c3f(1.0, 0.0, 0.0)
-        sgl.v3f_t2f(-1.0,  1.0, -1.0, -1.0,  1.0)
-        sgl.v3f_t2f( 1.0,  1.0, -1.0,  1.0,  1.0)
-        sgl.v3f_t2f( 1.0, -1.0, -1.0,  1.0, -1.0)
-        sgl.v3f_t2f(-1.0, -1.0, -1.0, -1.0, -1.0)
+    sgl.v3f_t2f(-1.0, 1.0, -1.0, -1.0, 1.0)
+    sgl.v3f_t2f(1.0, 1.0, -1.0, 1.0, 1.0)
+    sgl.v3f_t2f(1.0, -1.0, -1.0, 1.0, -1.0)
+    sgl.v3f_t2f(-1.0, -1.0, -1.0, -1.0, -1.0)
     sgl.c3f(0.0, 1.0, 0.0)
-        sgl.v3f_t2f(-1.0, -1.0,  1.0, -1.0,  1.0)
-        sgl.v3f_t2f( 1.0, -1.0,  1.0,  1.0,  1.0)
-        sgl.v3f_t2f( 1.0,  1.0,  1.0,  1.0, -1.0)
-        sgl.v3f_t2f(-1.0,  1.0,  1.0, -1.0, -1.0)
+    sgl.v3f_t2f(-1.0, -1.0, 1.0, -1.0, 1.0)
+    sgl.v3f_t2f(1.0, -1.0, 1.0, 1.0, 1.0)
+    sgl.v3f_t2f(1.0, 1.0, 1.0, 1.0, -1.0)
+    sgl.v3f_t2f(-1.0, 1.0, 1.0, -1.0, -1.0)
     sgl.c3f(0.0, 0.0, 1.0)
-        sgl.v3f_t2f(-1.0, -1.0,  1.0, -1.0,  1.0)
-        sgl.v3f_t2f(-1.0,  1.0,  1.0,  1.0,  1.0)
-        sgl.v3f_t2f(-1.0,  1.0, -1.0,  1.0, -1.0)
-        sgl.v3f_t2f(-1.0, -1.0, -1.0, -1.0, -1.0)
+    sgl.v3f_t2f(-1.0, -1.0, 1.0, -1.0, 1.0)
+    sgl.v3f_t2f(-1.0, 1.0, 1.0, 1.0, 1.0)
+    sgl.v3f_t2f(-1.0, 1.0, -1.0, 1.0, -1.0)
+    sgl.v3f_t2f(-1.0, -1.0, -1.0, -1.0, -1.0)
     sgl.c3f(1.0, 0.5, 0.0)
-        sgl.v3f_t2f(1.0, -1.0,  1.0, -1.0,   1.0)
-        sgl.v3f_t2f(1.0, -1.0, -1.0,  1.0,   1.0)
-        sgl.v3f_t2f(1.0,  1.0, -1.0,  1.0,  -1.0)
-        sgl.v3f_t2f(1.0,  1.0,  1.0, -1.0,  -1.0)
+    sgl.v3f_t2f(1.0, -1.0, 1.0, -1.0, 1.0)
+    sgl.v3f_t2f(1.0, -1.0, -1.0, 1.0, 1.0)
+    sgl.v3f_t2f(1.0, 1.0, -1.0, 1.0, -1.0)
+    sgl.v3f_t2f(1.0, 1.0, 1.0, -1.0, -1.0)
     sgl.c3f(0.0, 0.5, 1.0)
-        sgl.v3f_t2f( 1.0, -1.0, -1.0, -1.0,  1.0)
-        sgl.v3f_t2f( 1.0, -1.0,  1.0,  1.0,  1.0)
-        sgl.v3f_t2f(-1.0, -1.0,  1.0,  1.0, -1.0)
-        sgl.v3f_t2f(-1.0, -1.0, -1.0, -1.0, -1.0)
+    sgl.v3f_t2f(1.0, -1.0, -1.0, -1.0, 1.0)
+    sgl.v3f_t2f(1.0, -1.0, 1.0, 1.0, 1.0)
+    sgl.v3f_t2f(-1.0, -1.0, 1.0, 1.0, -1.0)
+    sgl.v3f_t2f(-1.0, -1.0, -1.0, -1.0, -1.0)
     sgl.c3f(1.0, 0.0, 0.5)
-        sgl.v3f_t2f(-1.0,  1.0, -1.0, -1.0,  1.0)
-        sgl.v3f_t2f(-1.0,  1.0,  1.0,  1.0,  1.0)
-        sgl.v3f_t2f( 1.0,  1.0,  1.0,  1.0, -1.0)
-        sgl.v3f_t2f( 1.0,  1.0, -1.0, -1.0, -1.0)
+    sgl.v3f_t2f(-1.0, 1.0, -1.0, -1.0, 1.0)
+    sgl.v3f_t2f(-1.0, 1.0, 1.0, 1.0, 1.0)
+    sgl.v3f_t2f(1.0, 1.0, 1.0, 1.0, -1.0)
+    sgl.v3f_t2f(1.0, 1.0, -1.0, -1.0, -1.0)
     sgl.end()
 }
 
-draw_cubes :: proc (t: f32) {
+draw_cubes :: proc(t: f32) {
     @(static) rot: [2]f32
     rot[0] += 1.0 * t
     rot[1] += 2.0 * t
@@ -146,22 +124,22 @@ draw_cubes :: proc (t: f32) {
     sgl.rotate(sgl.rad(rot[1]), 0.0, 1.0, 0.0)
     cube()
     sgl.push_matrix()
-        sgl.translate(0.0, 0.0, 3.0)
-        sgl.scale(0.5, 0.5, 0.5)
-        sgl.rotate(-2.0 * sgl.rad(rot[0]), 1.0, 0.0, 0.0)
-        sgl.rotate(-2.0 * sgl.rad(rot[1]), 0.0, 1.0, 0.0)
-        cube()
-        sgl.push_matrix()
-            sgl.translate(0.0, 0.0, 3.0)
-            sgl.scale(0.5, 0.5, 0.5)
-            sgl.rotate(-3.0 * sgl.rad(2*rot[0]), 1.0, 0.0, 0.0)
-            sgl.rotate(3.0 * sgl.rad(2*rot[1]), 0.0, 0.0, 1.0)
-            cube()
-        sgl.pop_matrix()
+    sgl.translate(0.0, 0.0, 3.0)
+    sgl.scale(0.5, 0.5, 0.5)
+    sgl.rotate(-2.0 * sgl.rad(rot[0]), 1.0, 0.0, 0.0)
+    sgl.rotate(-2.0 * sgl.rad(rot[1]), 0.0, 1.0, 0.0)
+    cube()
+    sgl.push_matrix()
+    sgl.translate(0.0, 0.0, 3.0)
+    sgl.scale(0.5, 0.5, 0.5)
+    sgl.rotate(-3.0 * sgl.rad(2 * rot[0]), 1.0, 0.0, 0.0)
+    sgl.rotate(3.0 * sgl.rad(2 * rot[1]), 0.0, 0.0, 1.0)
+    cube()
+    sgl.pop_matrix()
     sgl.pop_matrix()
 }
 
-draw_tex_cube :: proc (t: f32) {
+draw_tex_cube :: proc(t: f32) {
     @(static) frame_count: f32
     frame_count += 1.0
     a := sgl.rad(frame_count * t)
@@ -224,7 +202,7 @@ frame :: proc "c" () {
     // is the only sokol/gl function that must be called inside
     // a sokol/gfx begin/end pass pair.
     // sgl.draw() also 'rewinds' sokol-gl for the next frame.
-    sg.begin_pass({ action = state.pass_action, swapchain = sglue.swapchain() })
+    sg.begin_pass({action = state.pass_action, swapchain = sglue.swapchain()})
     sgl.draw()
     sg.end_pass()
     sg.commit()
@@ -236,16 +214,19 @@ cleanup :: proc "c" () {
     sg.shutdown()
 }
 
-main :: proc () {
-    sapp.run({
-        init_cb = init,
-        frame_cb = frame,
-        cleanup_cb = cleanup,
-        width = 512,
-        height = 512,
-        sample_count = 4,
-        window_title = "sgl",
-        icon = { sokol_default = true },
-        logger = { func = slog.func },
-    })
+main :: proc() {
+    sapp.run(
+        {
+            init_cb = init,
+            frame_cb = frame,
+            cleanup_cb = cleanup,
+            width = 512,
+            height = 512,
+            sample_count = 4,
+            window_title = "sgl",
+            icon = {sokol_default = true},
+            logger = {func = slog.func},
+        },
+    )
 }
+

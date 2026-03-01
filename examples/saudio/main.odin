@@ -4,43 +4,36 @@
 //------------------------------------------------------------------------------
 package main
 
+import sapp "../../app"
+import saudio "../../audio"
+import sg "../../gfx"
+import sglue "../../glue"
+import slog "../../log"
 import "base:runtime"
-import slog "../../sokol/log"
-import sg "../../sokol/gfx"
-import sapp "../../sokol/app"
-import sglue "../../sokol/glue"
-import saudio "../../sokol/audio"
 
 NUM_SAMPLES :: 32
 
 state: struct {
     pass_action: sg.Pass_Action,
-    even_odd: u32,
-    sample_pos: int,
-    samples: [NUM_SAMPLES]f32,
+    even_odd:    u32,
+    sample_pos:  int,
+    samples:     [NUM_SAMPLES]f32,
 } = {
-    pass_action = {
-        colors = { 0 = { load_action = .CLEAR, clear_value = { 1.0, 0.5, 0.0, 1.0 }, } },
-    },
+    pass_action = {colors = {0 = {load_action = .CLEAR, clear_value = {1.0, 0.5, 0.0, 1.0}}}},
 }
 
 init :: proc "c" () {
     context = runtime.default_context()
-    sg.setup({
-        environment = sglue.environment(),
-        logger = { func = slog.func },
-     })
-    saudio.setup({
-        logger = { func = slog.func },
-    })
+    sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
+    saudio.setup({logger = {func = slog.func}})
 }
 
 frame :: proc "c" () {
     context = runtime.default_context()
     num_frames := saudio.expect()
-    for i in 0..<num_frames {
+    for i in 0 ..< num_frames {
         state.even_odd += 1
-        state.samples[state.sample_pos] = (state.even_odd & (1<<5)) == 0 ? 0.05 : -0.05
+        state.samples[state.sample_pos] = (state.even_odd & (1 << 5)) == 0 ? 0.05 : -0.05
         state.sample_pos += 1
         if state.sample_pos == NUM_SAMPLES {
             state.sample_pos = 0
@@ -48,7 +41,7 @@ frame :: proc "c" () {
         }
     }
 
-    sg.begin_pass({ action = state.pass_action, swapchain = sglue.swapchain() })
+    sg.begin_pass({action = state.pass_action, swapchain = sglue.swapchain()})
     sg.end_pass()
     sg.commit()
 }
@@ -59,15 +52,18 @@ cleanup :: proc "c" () {
     sg.shutdown()
 }
 
-main :: proc () {
-    sapp.run({
-        init_cb = init,
-        frame_cb = frame,
-        cleanup_cb = cleanup,
-        width = 400,
-        height = 300,
-        window_title = "saudio",
-        icon = { sokol_default = true },
-        logger = { func = slog.func },
-    })
+main :: proc() {
+    sapp.run(
+        {
+            init_cb = init,
+            frame_cb = frame,
+            cleanup_cb = cleanup,
+            width = 400,
+            height = 300,
+            window_title = "saudio",
+            icon = {sokol_default = true},
+            logger = {func = slog.func},
+        },
+    )
 }
+
