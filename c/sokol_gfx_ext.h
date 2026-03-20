@@ -24,6 +24,7 @@ extern "C" {
 SOKOL_GFX_API_DECL void sg_query_image_pixels(sg_image img_id, void* pixels, int size);
 SOKOL_GFX_API_DECL void sg_query_pixels(int x, int y, int w, int h, bool origin_top_left, void* pixels, int size);
 SOKOL_GFX_API_DECL void sg_update_texture_filter(sg_image img_id, sg_filter min_filter, sg_filter mag_filter);
+SOKOL_GFX_API_DECL sg_image sg_make_image_with_mipmaps(const sg_image_desc* desc_);
 SOKOL_GFX_API_DECL const void* sg_mtl_command_buffer(void);
 
 #ifdef __cplusplus
@@ -39,6 +40,61 @@ SOKOL_GFX_API_DECL const void* sg_mtl_command_buffer(void);
 #ifndef SOKOL_GFX_IMPL_INCLUDED
 #error "Please include sokol_gfx.h implementation before sokol_gfx_ext.h implementation"
 #endif
+
+static int _sgext_mipmap_num_channels(sg_pixel_format fmt) {
+    switch (fmt) {
+        case SG_PIXELFORMAT_R8:
+            return 1;
+        case SG_PIXELFORMAT_RGBA8:
+        case SG_PIXELFORMAT_BGRA8:
+            return 4;
+        default:
+            return 0;
+    }
+}
+
+static int _sgext_mipmap_max_levels(int width, int height) {
+    int levels = 1;
+    int max_dim = _sg_max(width, height);
+    while ((max_dim > 1) && (levels < SG_MAX_MIPMAPS)) {
+        max_dim = _sg_max(max_dim >> 1, 1);
+        levels++;
+    }
+    return levels;
+}
+
+// Downsample each slice independently so array- and cubemap texture data stays tightly packed per mip level.
+static void _sgext_downsample_2d_slices(const uint8_t* src, uint8_t* dst, int src_w, int src_h, int dst_w, int dst_h, int num_channels, int num_slices) {
+    SOKOL_ASSERT(src);
+    SOKOL_ASSERT(dst);
+    const int src_slice_pitch = src_w * src_h * num_channels;
+    const int dst_slice_pitch = dst_w * dst_h * num_channels;
+    for (int slice = 0; slice < num_slices; slice++) {
+        const uint8_t* src_slice = src + (slice * src_slice_pitch);
+        uint8_t* dst_slice = dst + (slice * dst_slice_pitch);
+        for (int y = 0; y < dst_h; y++) {
+            const int sy0 = _sg_min(y * 2, src_h - 1);
+            const int sy1 = _sg_min(sy0 + 1, src_h - 1);
+            for (int x = 0; x < dst_w; x++) {
+                const int sx0 = _sg_min(x * 2, src_w - 1);
+                const int sx1 = _sg_min(sx0 + 1, src_w - 1);
+                const int dst_index = (y * dst_w + x) * num_channels;
+                const int src00 = (sy0 * src_w + sx0) * num_channels;
+                const int src01 = (sy0 * src_w + sx1) * num_channels;
+                const int src10 = (sy1 * src_w + sx0) * num_channels;
+                const int src11 = (sy1 * src_w + sx1) * num_channels;
+                for (int ch = 0; ch < num_channels; ch++) {
+                    int col = 0;
+                    col += src_slice[src00 + ch];
+                    col += src_slice[src01 + ch];
+                    col += src_slice[src10 + ch];
+                    col += src_slice[src11 + ch];
+                    dst_slice[dst_index + ch] = (uint8_t)(col / 4);
+                }
+            }
+        }
+    }
+}
 
 #if defined(_SOKOL_ANY_GL)
 
@@ -265,6 +321,62 @@ void sg_update_texture_filter(sg_image img_id, sg_filter min_filter, sg_filter m
     _SOKOL_UNUSED(min_filter);
     _SOKOL_UNUSED(mag_filter);
 #endif
+}
+
+sg_image sg_make_image_with_mipmaps(const sg_image_desc* desc_) {
+    SOKOL_ASSERT(desc_);
+    sg_image_desc desc = sg_query_image_defaults(desc_);
+    const int num_channels = _sgext_mipmap_num_channels(desc.pixel_format);
+    SOKOL_ASSERT(num_channels > 0);
+    SOKOL_ASSERT(desc.usage.immutable);
+    SOKOL_ASSERT(!desc.usage.dynamic_update);
+    SOKOL_ASSERT(!desc.usage.stream_update);
+    SOKOL_ASSERT(!desc.usage.storage_image);
+    SOKOL_ASSERT(!desc.usage.color_attachment);
+    SOKOL_ASSERT(!desc.usage.resolve_attachment);
+    SOKOL_ASSERT(!desc.usage.depth_stencil_attachment);
+    SOKOL_ASSERT(desc.type != SG_IMAGETYPE_3D);
+    SOKOL_ASSERT(desc.data.mip_levels[0].ptr);
+
+    const int full_mipmap_levels = _sgext_mipmap_max_levels(desc.width, desc.height);
+    const int max_mipmap_levels = (desc.num_mipmaps > 1) ?
+        _sg_min(desc.num_mipmaps, full_mipmap_levels) :
+        full_mipmap_levels;
+    const int slice_count = desc.num_slices;
+    const int base_size = slice_count * sg_query_surface_pitch(desc.pixel_format, desc.width, desc.height, 1);
+    SOKOL_ASSERT((int)desc.data.mip_levels[0].size == base_size);
+
+    void* generated_mips[SG_MAX_MIPMAPS] = { 0 };
+    desc.num_mipmaps = 1;
+    for (int level = 1; level < max_mipmap_levels; level++) {
+        const uint8_t* src = (const uint8_t*) desc.data.mip_levels[level - 1].ptr;
+        const int src_w = _sg_miplevel_dim(desc.width, level - 1);
+        const int src_h = _sg_miplevel_dim(desc.height, level - 1);
+        const int dst_w = _sg_miplevel_dim(desc.width, level);
+        const int dst_h = _sg_miplevel_dim(desc.height, level);
+        const int mip_size = slice_count * sg_query_surface_pitch(desc.pixel_format, dst_w, dst_h, 1);
+        SOKOL_ASSERT(src);
+
+        if (!desc.data.mip_levels[level].ptr) {
+            // Generate only the missing levels so callers may still override specific mip data if they want to.
+            generated_mips[level] = _sg_malloc((size_t) mip_size);
+            SOKOL_ASSERT(generated_mips[level]);
+            _sgext_downsample_2d_slices(src, (uint8_t*) generated_mips[level], src_w, src_h, dst_w, dst_h, num_channels, slice_count);
+            desc.data.mip_levels[level].ptr = generated_mips[level];
+            desc.data.mip_levels[level].size = (size_t) mip_size;
+        } else {
+            SOKOL_ASSERT((int) desc.data.mip_levels[level].size == mip_size);
+        }
+        desc.num_mipmaps = level + 1;
+    }
+
+    sg_image img = sg_make_image(&desc);
+    for (int level = 1; level < SG_MAX_MIPMAPS; level++) {
+        if (generated_mips[level]) {
+            _sg_free(generated_mips[level]);
+        }
+    }
+    return img;
 }
 
 const void* sg_mtl_command_buffer(void) {
