@@ -40,18 +40,17 @@ logger_proc :: proc "c" (
         line      = i32(line_nr),
     }
 
-    level: log.Level
     switch log_level {
     case 0:
         log.panicf("Sokol Panic: (%i) %s: %s", log_item, tag, message, location = loc)
 
     case 1:
-        level = .Error
+        // DUMBAI: escalate sokol error callbacks to panic so crash reports capture backtraces at first graphics failure.
+        log.panicf("Sokol Error: (%i) %s: %s", log_item, tag, message, location = loc)
     case 2:
-        level = .Warning
+        log.logf(.Warning, "(%i) %s: %s", log_item, tag, message, location = loc)
     case:
-        level = .Info
+        // DUMBAI: keep non-fatal diagnostics as regular logs to avoid turning informational chatter into crashes.
+        log.logf(.Info, "(%i) %s: %s", log_item, tag, message, location = loc)
     }
-
-    log.logf(level, "(%i) %s: %s", log_item, tag, message, location = loc)
 }
