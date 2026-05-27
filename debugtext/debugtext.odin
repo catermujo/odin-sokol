@@ -526,18 +526,36 @@ USE_GL :: #config(SOKOL_USE_GL, false)
 USE_DLL :: #config(SOKOL_DLL, false)
 
 when ODIN_OS == .Windows {
-    when USE_DLL {
-        when USE_GL {
-            when DEBUG { foreign import sokol_debugtext_clib "../sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_debugtext_clib "../sokol_dll_windows_x64_gl_release.lib" }
+    when ODIN_ARCH == .arm64 {
+        when USE_DLL {
+            when USE_GL {
+                when DEBUG { foreign import sokol_debugtext_clib "../sokol_dll_windows_arm64_gl_debug.lib" } else { foreign import sokol_debugtext_clib "../sokol_dll_windows_arm64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_debugtext_clib "../sokol_dll_windows_arm64_d3d11_debug.lib" } else { foreign import sokol_debugtext_clib "../sokol_dll_windows_arm64_d3d11_release.lib" }
+            }
         } else {
-            when DEBUG { foreign import sokol_debugtext_clib "../sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_debugtext_clib "../sokol_dll_windows_x64_d3d11_release.lib" }
+            when USE_GL {
+                when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_windows_arm64_gl_debug.lib" } else { foreign import sokol_debugtext_clib "sokol_debugtext_windows_arm64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_windows_arm64_d3d11_debug.lib" } else { foreign import sokol_debugtext_clib "sokol_debugtext_windows_arm64_d3d11_release.lib" }
+            }
+        }
+    } else when ODIN_ARCH == .amd64 {
+        when USE_DLL {
+            when USE_GL {
+                when DEBUG { foreign import sokol_debugtext_clib "../sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_debugtext_clib "../sokol_dll_windows_x64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_debugtext_clib "../sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_debugtext_clib "../sokol_dll_windows_x64_d3d11_release.lib" }
+            }
+        } else {
+            when USE_GL {
+                when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_windows_x64_gl_debug.lib" } else { foreign import sokol_debugtext_clib "sokol_debugtext_windows_x64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_windows_x64_d3d11_debug.lib" } else { foreign import sokol_debugtext_clib "sokol_debugtext_windows_x64_d3d11_release.lib" }
+            }
         }
     } else {
-        when USE_GL {
-            when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_windows_x64_gl_debug.lib" } else { foreign import sokol_debugtext_clib "sokol_debugtext_windows_x64_gl_release.lib" }
-        } else {
-            when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_windows_x64_d3d11_debug.lib" } else { foreign import sokol_debugtext_clib "sokol_debugtext_windows_x64_d3d11_release.lib" }
-        }
+        #panic("This architecture is currently not supported on Windows")
     }
 } else when ODIN_OS == .Darwin {
     when USE_DLL {
@@ -559,10 +577,20 @@ when ODIN_OS == .Windows {
         }
     }
 } else when ODIN_OS == .Linux {
-    when USE_DLL {
-        when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_linux_x64_gl_debug.so" } else { foreign import sokol_debugtext_clib "sokol_debugtext_linux_x64_gl_release.so" }
+    when ODIN_ARCH == .amd64 {
+        when USE_DLL {
+            when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_linux_x64_gl_debug.so" } else { foreign import sokol_debugtext_clib "sokol_debugtext_linux_x64_gl_release.so" }
+        } else {
+            when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_linux_x64_gl_debug.a" } else { foreign import sokol_debugtext_clib "sokol_debugtext_linux_x64_gl_release.a" }
+        }
+    } else when ODIN_ARCH == .arm64 {
+        when USE_DLL {
+            when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_linux_arm64_gl_debug.so" } else { foreign import sokol_debugtext_clib "sokol_debugtext_linux_arm64_gl_release.so" }
+        } else {
+            when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_linux_arm64_gl_debug.a" } else { foreign import sokol_debugtext_clib "sokol_debugtext_linux_arm64_gl_release.a" }
+        }
     } else {
-        when DEBUG { foreign import sokol_debugtext_clib "sokol_debugtext_linux_x64_gl_debug.a" } else { foreign import sokol_debugtext_clib "sokol_debugtext_linux_x64_gl_release.a" }
+        #panic("This architecture is currently not supported on Linux")
     }
 } else when ODIN_ARCH == .wasm32 || ODIN_ARCH == .wasm64p32 {
     // Feed sokol_debugtext_wasm_gl_debug.a or sokol_debugtext_wasm_gl_release.a into emscripten compiler.

@@ -1974,18 +1974,36 @@ USE_VULKAN :: #config(SOKOL_USE_VULKAN, false)
 USE_DLL :: #config(SOKOL_DLL, false)
 
 when ODIN_OS == .Windows {
-    when USE_DLL {
-        when USE_GL {
-            when DEBUG { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_gl_release.lib" }
+    when ODIN_ARCH == .arm64 {
+        when USE_DLL {
+            when USE_GL {
+                when DEBUG { foreign import sokol_gfx_clib "../sokol_dll_windows_arm64_gl_debug.lib" } else { foreign import sokol_gfx_clib "../sokol_dll_windows_arm64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_gfx_clib "../sokol_dll_windows_arm64_d3d11_debug.lib" } else { foreign import sokol_gfx_clib "../sokol_dll_windows_arm64_d3d11_release.lib" }
+            }
         } else {
-            when DEBUG { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_d3d11_release.lib" }
+            when USE_GL {
+                when DEBUG { foreign import sokol_gfx_clib "sokol_gfx_windows_arm64_gl_debug.lib" } else { foreign import sokol_gfx_clib "sokol_gfx_windows_arm64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_gfx_clib "sokol_gfx_windows_arm64_d3d11_debug.lib" } else { foreign import sokol_gfx_clib "sokol_gfx_windows_arm64_d3d11_release.lib" }
+            }
+        }
+    } else when ODIN_ARCH == .amd64 {
+        when USE_DLL {
+            when USE_GL {
+                when DEBUG { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_gfx_clib "../sokol_dll_windows_x64_d3d11_release.lib" }
+            }
+        } else {
+            when USE_GL {
+                when DEBUG { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_gl_debug.lib" } else { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_d3d11_debug.lib" } else { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_d3d11_release.lib" }
+            }
         }
     } else {
-        when USE_GL {
-            when DEBUG { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_gl_debug.lib" } else { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_gl_release.lib" }
-        } else {
-            when DEBUG { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_d3d11_debug.lib" } else { foreign import sokol_gfx_clib "sokol_gfx_windows_x64_d3d11_release.lib" }
-        }
+        #panic("This architecture is currently not supported on Windows")
     }
 } else when ODIN_OS == .Darwin {
     when USE_DLL {
@@ -2007,18 +2025,36 @@ when ODIN_OS == .Windows {
         }
     }
 } else when ODIN_OS == .Linux {
-    when USE_VULKAN {
-        when USE_DLL {
-            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_debug.so", "system:vulkan", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_release.so", "system:vulkan", "system:dl", "system:pthread"} }
+    when ODIN_ARCH == .amd64 {
+        when USE_VULKAN {
+            when USE_DLL {
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_debug.so", "system:vulkan", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_release.so", "system:vulkan", "system:dl", "system:pthread"} }
+            } else {
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_debug.a", "system:vulkan", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_release.a", "system:vulkan", "system:dl", "system:pthread"} }
+            }
         } else {
-            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_debug.a", "system:vulkan", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_vulkan_release.a", "system:vulkan", "system:dl", "system:pthread"} }
+            when USE_DLL {
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_debug.so", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_release.so", "system:GL", "system:dl", "system:pthread"} }
+            } else {
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_debug.a", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_release.a", "system:GL", "system:dl", "system:pthread"} }
+            }
+        }
+    } else when ODIN_ARCH == .arm64 {
+        when USE_VULKAN {
+            when USE_DLL {
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_arm64_vulkan_debug.so", "system:vulkan", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_arm64_vulkan_release.so", "system:vulkan", "system:dl", "system:pthread"} }
+            } else {
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_arm64_vulkan_debug.a", "system:vulkan", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_arm64_vulkan_release.a", "system:vulkan", "system:dl", "system:pthread"} }
+            }
+        } else {
+            when USE_DLL {
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_arm64_gl_debug.so", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_arm64_gl_release.so", "system:GL", "system:dl", "system:pthread"} }
+            } else {
+                when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_arm64_gl_debug.a", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_arm64_gl_release.a", "system:GL", "system:dl", "system:pthread"} }
+            }
         }
     } else {
-        when USE_DLL {
-            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_debug.so", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_release.so", "system:GL", "system:dl", "system:pthread"} }
-        } else {
-            when DEBUG { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_debug.a", "system:GL", "system:dl", "system:pthread"} } else { foreign import sokol_gfx_clib {"sokol_gfx_linux_x64_gl_release.a", "system:GL", "system:dl", "system:pthread"} }
-        }
+        #panic("This architecture is currently not supported on Linux")
     }
 } else when ODIN_ARCH == .wasm32 || ODIN_ARCH == .wasm64p32 {
     // Feed sokol_gfx_wasm_gl_debug.a or sokol_gfx_wasm_gl_release.a into emscripten compiler.
@@ -2119,6 +2155,7 @@ foreign sokol_gfx_clib {
     query_image_sample_count :: proc(img: Image) -> c.int ---
     query_image_pixels :: proc(img: Image, pixels: rawptr, #any_int size: c.int) ---
     query_pixels :: proc(#any_int x: c.int, #any_int y: c.int, #any_int w: c.int, #any_int h: c.int, origin_top_left: bool, pixels: rawptr, #any_int size: c.int) ---
+    make_image_with_mipmaps :: proc(#by_ptr desc: Image_Desc) -> Image ---
     update_texture_filter :: proc(img: Image, min_filter: Filter, mag_filter: Filter) ---
     query_view_type :: proc(view: View) -> View_Type ---
     query_view_image :: proc(view: View) -> Image ---

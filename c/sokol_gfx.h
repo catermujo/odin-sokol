@@ -5886,6 +5886,8 @@ inline int sg_append_buffer(sg_buffer buf_id, const sg_range& data) { return sg_
         #define GL_LESS 0x0201
         #define GL_MULTISAMPLE 0x809D
         #define GL_FRAMEBUFFER_BINDING 0x8CA6
+        #define GL_VIEWPORT 0x0BA2
+        #define GL_READ_BUFFER 0x0C02
         #define GL_BACK 0x0405
         #define GL_ALWAYS 0x0207
         #define GL_FUNC_ADD 0x8006
@@ -9197,6 +9199,8 @@ _SOKOL_PRIVATE void _sg_dummy_update_image(_sg_image_t* img, const sg_image_data
     _SG_XMACRO(glEnableVertexAttribArray,         void, (GLuint index)) \
     _SG_XMACRO(glBlendFunc,                       void, (GLenum sfactor, GLenum dfactor)) \
     _SG_XMACRO(glReadBuffer,                      void, (GLenum src)) \
+    _SG_XMACRO(glReadPixels,                      void, (GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void * pixels)) \
+    _SG_XMACRO(glGetTexImage,                     void, (GLenum target, GLint level, GLenum format, GLenum type, void * pixels)) \
     _SG_XMACRO(glTexImage2D,                      void, (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void * pixels)) \
     _SG_XMACRO(glGenVertexArrays,                 void, (GLsizei n, GLuint * arrays)) \
     _SG_XMACRO(glFrontFace,                       void, (GLenum mode)) \
@@ -17204,6 +17208,9 @@ _SOKOL_PRIVATE void _sg_wgpu_init_caps(void) {
     _sg.features.dual_source_blending = wgpuDeviceHasFeature(_sg.wgpu.dev, WGPUFeatureName_DualSourceBlending);
     _sg.features.vertexformat_int10_n2 = false;
 
+    // DUMBAI: emdawnwebgpu asserts that WGPULimits.nextInChain is null, so reset
+    // it explicitly here before querying limits to guard against stale memory.
+    _sg.wgpu.limits.nextInChain = 0;
     wgpuDeviceGetLimits(_sg.wgpu.dev, &_sg.wgpu.limits);
 
     const WGPULimits* l = &_sg.wgpu.limits;

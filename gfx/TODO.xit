@@ -1,0 +1,52 @@
+= Portable GPU mipmaps
+Track the work required to make GPU mipmap generation behave consistently across sokol-gfx backends.
+
+[ ] define the public API surface
+    keep mip generation separate from sampler state so filtering stays an independent concern
+[ ] decide the portable contract
+    start with 2D sampled textures, exclude depth, multisampled, compressed, and 3D images in v1
+[ ] choose the baseline implementation
+    use a pass-per-level raster fallback as the portable path and treat native backend helpers as optional fast paths
+[ ] define usage requirements on sg_image_desc
+    document which combinations of sampled, attachment, resolve, and storage usage are required for generation
+[ ] define update semantics
+    clarify whether mip generation happens only after sg_make_image, after sg_update_image, or as an explicit command
+[ ] define format rules
+    spell out which formats are guaranteed, with sRGB behavior and BGRA/R8/RGBA handled explicitly
+[ ] define slice rules
+    specify how cubemaps and array slices are generated, and whether they are part of v1 or deferred
+
+= Common runtime work
+[ ] add shared validation
+    reject invalid image types, missing mip chains, unsupported formats, and read-write hazards with clear errors
+[ ] add shared transient view management
+    create per-level texture and attachment views without leaking backend objects
+[ ] add shared synchronization rules
+    ensure generation cannot overlap with render passes, storage writes, or texture reads on the same image
+[ ] add shared fallback shaders
+    provide a simple downsample pipeline for the raster fallback that covers the guaranteed formats
+[ ] decide fast-path selection
+    prefer native backend mip generators when available, otherwise fall back to the portable raster path
+
+= Backend work
+[ ] GLCORE / GLES3 / WebGL2
+    wire up glGenerateMipmap where legal, validate renderable/filterable format constraints, and preserve state cache correctness
+[ ] D3D11
+    create textures with the required bind and misc flags, then call GenerateMips only when the format and view layout allow it
+[ ] Metal
+    use MTLBlitCommandEncoder generateMipmapsForTexture on eligible textures and keep encoder transitions correct
+[ ] WGPU
+    implement the raster fallback with per-mip texture views because there is no portable native generate call
+[ ] Vulkan
+    use vkCmdBlitImage when the format supports linear blits, otherwise fall back to the shared raster path with proper barriers
+[ ] Dummy backend
+    keep validation behavior deterministic even when no actual GPU work happens
+
+= Validation and examples
+[ ] add a vendor/sokol example that uploads level 0, generates the remaining levels on the GPU, and visualizes mip selection
+[ ] test all supported backends
+    cover GLCORE, GLES3/WebGL2, D3D11, Metal, WGPU, and Vulkan where available in CI or local build scripts
+[ ] add regression coverage
+    verify repeated generation after updates, non-square textures, array slices, and sRGB textures
+[ ] document backend caveats
+    capture the format restrictions and fallback cases so callers know when generation is guaranteed

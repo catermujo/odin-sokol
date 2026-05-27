@@ -548,18 +548,36 @@ USE_GL :: #config(SOKOL_USE_GL, false)
 USE_DLL :: #config(SOKOL_DLL, false)
 
 when ODIN_OS == .Windows {
-    when USE_DLL {
-        when USE_GL {
-            when DEBUG { foreign import sokol_audio_clib "../sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_audio_clib "../sokol_dll_windows_x64_gl_release.lib" }
+    when ODIN_ARCH == .amd64 {
+        when USE_DLL {
+            when USE_GL {
+                when DEBUG { foreign import sokol_audio_clib "../windows_x64/sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_audio_clib "../windows_x64/sokol_dll_windows_x64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_audio_clib "../windows_x64/sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_audio_clib "../windows_x64/sokol_dll_windows_x64_d3d11_release.lib" }
+            }
         } else {
-            when DEBUG { foreign import sokol_audio_clib "../sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_audio_clib "../sokol_dll_windows_x64_d3d11_release.lib" }
+            when USE_GL {
+                when DEBUG { foreign import sokol_audio_clib "windows_x64/sokol_audio_windows_x64_gl_debug.lib" } else { foreign import sokol_audio_clib "windows_x64/sokol_audio_windows_x64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_audio_clib "windows_x64/sokol_audio_windows_x64_d3d11_debug.lib" } else { foreign import sokol_audio_clib "windows_x64/sokol_audio_windows_x64_d3d11_release.lib" }
+            }
+        }
+    } else when ODIN_ARCH == .arm64 {
+        when USE_DLL {
+            when USE_GL {
+                when DEBUG { foreign import sokol_audio_clib "../windows_arm64/sokol_dll_windows_arm64_gl_debug.lib" } else { foreign import sokol_audio_clib "../windows_arm64/sokol_dll_windows_arm64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_audio_clib "../windows_arm64/sokol_dll_windows_arm64_d3d11_debug.lib" } else { foreign import sokol_audio_clib "../windows_arm64/sokol_dll_windows_arm64_d3d11_release.lib" }
+            }
+        } else {
+            when USE_GL {
+                when DEBUG { foreign import sokol_audio_clib "windows_arm64/sokol_audio_windows_arm64_gl_debug.lib" } else { foreign import sokol_audio_clib "windows_arm64/sokol_audio_windows_arm64_gl_release.lib" }
+            } else {
+                when DEBUG { foreign import sokol_audio_clib "windows_arm64/sokol_audio_windows_arm64_d3d11_debug.lib" } else { foreign import sokol_audio_clib "windows_arm64/sokol_audio_windows_arm64_d3d11_release.lib" }
+            }
         }
     } else {
-        when USE_GL {
-            when DEBUG { foreign import sokol_audio_clib "sokol_audio_windows_x64_gl_debug.lib" } else { foreign import sokol_audio_clib "sokol_audio_windows_x64_gl_release.lib" }
-        } else {
-            when DEBUG { foreign import sokol_audio_clib "sokol_audio_windows_x64_d3d11_debug.lib" } else { foreign import sokol_audio_clib "sokol_audio_windows_x64_d3d11_release.lib" }
-        }
+        #panic("This architecture is currently not supported on Windows")
     }
 } else when ODIN_OS == .Darwin {
     when USE_DLL {
@@ -581,10 +599,20 @@ when ODIN_OS == .Windows {
         }
     }
 } else when ODIN_OS == .Linux {
-    when USE_DLL {
-        when DEBUG { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_debug.so", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_release.so", "system:dl", "system:pthread"} }
+    when ODIN_ARCH == .amd64 {
+        when USE_DLL {
+            when DEBUG { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_debug.so", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_release.so", "system:dl", "system:pthread"} }
+        } else {
+            when DEBUG { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_debug.a", "system:asound", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_release.a", "system:asound", "system:dl", "system:pthread"} }
+        }
+    } else when ODIN_ARCH == .arm64 {
+        when USE_DLL {
+            when DEBUG { foreign import sokol_audio_clib {"sokol_audio_linux_arm64_gl_debug.so", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"sokol_audio_linux_arm64_gl_release.so", "system:dl", "system:pthread"} }
+        } else {
+            when DEBUG { foreign import sokol_audio_clib {"sokol_audio_linux_arm64_gl_debug.a", "system:asound", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"sokol_audio_linux_arm64_gl_release.a", "system:asound", "system:dl", "system:pthread"} }
+        }
     } else {
-        when DEBUG { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_debug.a", "system:asound", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_release.a", "system:asound", "system:dl", "system:pthread"} }
+        #panic("This architecture is currently not supported on Linux")
     }
 } else when ODIN_ARCH == .wasm32 || ODIN_ARCH == .wasm64p32 {
     // Feed sokol_audio_wasm_gl_debug.a or sokol_audio_wasm_gl_release.a into emscripten compiler.
