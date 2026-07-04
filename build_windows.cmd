@@ -2,6 +2,17 @@
 
 setlocal EnableDelayedExpansion
 
+set "SOKOL_BUILD_MODE=%~1"
+if /I "%SOKOL_BUILD_MODE%"=="shared" (
+    shift
+) else if /I "%SOKOL_BUILD_MODE%"=="static" (
+    shift
+) else if /I "%SOKOL_BUILD_MODE%"=="all" (
+    shift
+) else (
+    set "SOKOL_BUILD_MODE=all"
+)
+
 set "SOKOL_WINDOWS_HOST_ARCH=%PROCESSOR_ARCHITECTURE%"
 if not defined SOKOL_WINDOWS_HOST_ARCH set "SOKOL_WINDOWS_HOST_ARCH=x64"
 if /I "%SOKOL_WINDOWS_HOST_ARCH%"=="AMD64" set "SOKOL_WINDOWS_HOST_ARCH=x64"
@@ -20,47 +31,56 @@ if not "%SOKOL_WINDOWS_ARCH%"=="x64" if not "%SOKOL_WINDOWS_ARCH%"=="arm64" (
 call :ensure_msvc || exit /b 1
 
 set sources=log app gfx glue time audio debugtext shape gl
+set "ARCH_DIR=windows_%SOKOL_WINDOWS_ARCH%"
 
-REM D3D11 Debug
+if not exist "%ARCH_DIR%" mkdir "%ARCH_DIR%"
 for %%s in (%sources%) do (
-    cl /c /D_DEBUG /DIMPL /DSOKOL_D3D11 c\sokol_%%s.c /Z7 || exit /b 1
-    lib /OUT:%%s\sokol_%%s_windows_%SOKOL_WINDOWS_ARCH%_d3d11_debug.lib sokol_%%s.obj || exit /b 1
-    if exist sokol_%%s.obj del sokol_%%s.obj
+    if not exist "%%s\%ARCH_DIR%" mkdir "%%s\%ARCH_DIR%"
 )
 
-REM D3D11 Release
-for %%s in (%sources%) do (
-    cl /c /O2 /DNDEBUG /DIMPL /DSOKOL_D3D11 c\sokol_%%s.c || exit /b 1
-    lib /OUT:%%s\sokol_%%s_windows_%SOKOL_WINDOWS_ARCH%_d3d11_release.lib sokol_%%s.obj || exit /b 1
-    if exist sokol_%%s.obj del sokol_%%s.obj
+if /I not "%SOKOL_BUILD_MODE%"=="shared" (
+    REM D3D11 Debug
+    for %%s in (%sources%) do (
+        cl /c /D_DEBUG /DIMPL /DSOKOL_D3D11 c\sokol_%%s.c /Z7 || exit /b 1
+        lib /OUT:%%s\%ARCH_DIR%\sokol_%%s_windows_%SOKOL_WINDOWS_ARCH%_d3d11_debug.lib sokol_%%s.obj || exit /b 1
+        if exist sokol_%%s.obj del sokol_%%s.obj
+    )
+
+    REM D3D11 Release
+    for %%s in (%sources%) do (
+        cl /c /O2 /DNDEBUG /DIMPL /DSOKOL_D3D11 c\sokol_%%s.c || exit /b 1
+        lib /OUT:%%s\%ARCH_DIR%\sokol_%%s_windows_%SOKOL_WINDOWS_ARCH%_d3d11_release.lib sokol_%%s.obj || exit /b 1
+        if exist sokol_%%s.obj del sokol_%%s.obj
+    )
+
+    REM GL Debug
+    for %%s in (%sources%) do (
+        cl /c /D_DEBUG /DIMPL /DSOKOL_GLCORE c\sokol_%%s.c /Z7 || exit /b 1
+        lib /OUT:%%s\%ARCH_DIR%\sokol_%%s_windows_%SOKOL_WINDOWS_ARCH%_gl_debug.lib sokol_%%s.obj || exit /b 1
+        if exist sokol_%%s.obj del sokol_%%s.obj
+    )
+
+    REM GL Release
+    for %%s in (%sources%) do (
+        cl /c /O2 /DNDEBUG /DIMPL /DSOKOL_GLCORE c\sokol_%%s.c || exit /b 1
+        lib /OUT:%%s\%ARCH_DIR%\sokol_%%s_windows_%SOKOL_WINDOWS_ARCH%_gl_release.lib sokol_%%s.obj || exit /b 1
+        if exist sokol_%%s.obj del sokol_%%s.obj
+    )
 )
 
-REM GL Debug
-for %%s in (%sources%) do (
-    cl /c /D_DEBUG /DIMPL /DSOKOL_GLCORE c\sokol_%%s.c /Z7 || exit /b 1
-    lib /OUT:%%s\sokol_%%s_windows_%SOKOL_WINDOWS_ARCH%_gl_debug.lib sokol_%%s.obj || exit /b 1
-    if exist sokol_%%s.obj del sokol_%%s.obj
+if /I not "%SOKOL_BUILD_MODE%"=="static" (
+    REM D3D11 Debug DLL
+    cl /D_DEBUG /DIMPL /DSOKOL_DLL /DSOKOL_D3D11 c\sokol.c /Z7 /LDd /MDd /DLL /Fe:%ARCH_DIR%\sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_d3d11_debug.dll /link /INCREMENTAL:NO /IMPLIB:%ARCH_DIR%\sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_d3d11_debug.lib || exit /b 1
+
+    REM D3D11 Release DLL
+    cl /DNDEBUG /DIMPL /DSOKOL_DLL /DSOKOL_D3D11 c\sokol.c /LD /MD /DLL /Fe:%ARCH_DIR%\sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_d3d11_release.dll /link /INCREMENTAL:NO /IMPLIB:%ARCH_DIR%\sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_d3d11_release.lib || exit /b 1
+
+    REM GL Debug DLL
+    cl /D_DEBUG /DIMPL /DSOKOL_DLL /DSOKOL_GLCORE c\sokol.c /Z7 /LDd /MDd /DLL /Fe:%ARCH_DIR%\sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_gl_debug.dll /link /INCREMENTAL:NO /IMPLIB:%ARCH_DIR%\sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_gl_debug.lib || exit /b 1
+
+    REM GL Release DLL
+    cl /DNDEBUG /DIMPL /DSOKOL_DLL /DSOKOL_GLCORE c\sokol.c /LD /MD /DLL /Fe:%ARCH_DIR%\sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_gl_release.dll /link /INCREMENTAL:NO /IMPLIB:%ARCH_DIR%\sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_gl_release.lib || exit /b 1
 )
-
-REM GL Release
-for %%s in (%sources%) do (
-    cl /c /O2 /DNDEBUG /DIMPL /DSOKOL_GLCORE c\sokol_%%s.c || exit /b 1
-    lib /OUT:%%s\sokol_%%s_windows_%SOKOL_WINDOWS_ARCH%_gl_release.lib sokol_%%s.obj || exit /b 1
-    if exist sokol_%%s.obj del sokol_%%s.obj
-)
-
-REM D3D11 Debug DLL
-cl /D_DEBUG /DIMPL /DSOKOL_DLL /DSOKOL_D3D11 c\sokol.c /Z7 /LDd /MDd /DLL /Fe:sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_d3d11_debug.dll /link /INCREMENTAL:NO || exit /b 1
-
-REM D3D11 Release DLL
-REM DUMBAI: Keep the release DLLs aligned with the release static libraries by compiling them without debug defines.
-cl /DNDEBUG /DIMPL /DSOKOL_DLL /DSOKOL_D3D11 c\sokol.c /LD /MD /DLL /Fe:sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_d3d11_release.dll /link /INCREMENTAL:NO || exit /b 1
-
-REM GL Debug DLL
-cl /D_DEBUG /DIMPL /DSOKOL_DLL /DSOKOL_GLCORE c\sokol.c /Z7 /LDd /MDd /DLL /Fe:sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_gl_debug.dll /link /INCREMENTAL:NO || exit /b 1
-
-REM GL Release DLL
-cl /DNDEBUG /DIMPL /DSOKOL_DLL /DSOKOL_GLCORE c\sokol.c /LD /MD /DLL /Fe:sokol_dll_windows_%SOKOL_WINDOWS_ARCH%_gl_release.dll /link /INCREMENTAL:NO || exit /b 1
 
 if exist sokol.obj del sokol.obj
 

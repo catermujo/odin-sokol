@@ -98,29 +98,29 @@ when ODIN_OS == .Windows {
     when ODIN_ARCH == .arm64 {
         when USE_DLL {
             when USE_GL {
-                when DEBUG { foreign import sokol_glue_clib "../sokol_dll_windows_arm64_gl_debug.lib" } else { foreign import sokol_glue_clib "../sokol_dll_windows_arm64_gl_release.lib" }
+                when DEBUG { foreign import sokol_glue_clib "../windows_arm64/sokol_dll_windows_arm64_gl_debug.lib" } else { foreign import sokol_glue_clib "../windows_arm64/sokol_dll_windows_arm64_gl_release.lib" }
             } else {
-                when DEBUG { foreign import sokol_glue_clib "../sokol_dll_windows_arm64_d3d11_debug.lib" } else { foreign import sokol_glue_clib "../sokol_dll_windows_arm64_d3d11_release.lib" }
+                when DEBUG { foreign import sokol_glue_clib "../windows_arm64/sokol_dll_windows_arm64_d3d11_debug.lib" } else { foreign import sokol_glue_clib "../windows_arm64/sokol_dll_windows_arm64_d3d11_release.lib" }
             }
         } else {
             when USE_GL {
-                when DEBUG { foreign import sokol_glue_clib "sokol_glue_windows_arm64_gl_debug.lib" } else { foreign import sokol_glue_clib "sokol_glue_windows_arm64_gl_release.lib" }
+                when DEBUG { foreign import sokol_glue_clib "windows_arm64/sokol_glue_windows_arm64_gl_debug.lib" } else { foreign import sokol_glue_clib "windows_arm64/sokol_glue_windows_arm64_gl_release.lib" }
             } else {
-                when DEBUG { foreign import sokol_glue_clib "sokol_glue_windows_arm64_d3d11_debug.lib" } else { foreign import sokol_glue_clib "sokol_glue_windows_arm64_d3d11_release.lib" }
+                when DEBUG { foreign import sokol_glue_clib "windows_arm64/sokol_glue_windows_arm64_d3d11_debug.lib" } else { foreign import sokol_glue_clib "windows_arm64/sokol_glue_windows_arm64_d3d11_release.lib" }
             }
         }
     } else when ODIN_ARCH == .amd64 {
         when USE_DLL {
             when USE_GL {
-                when DEBUG { foreign import sokol_glue_clib "../sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_glue_clib "../sokol_dll_windows_x64_gl_release.lib" }
+                when DEBUG { foreign import sokol_glue_clib "../windows_x64/sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_glue_clib "../windows_x64/sokol_dll_windows_x64_gl_release.lib" }
             } else {
-                when DEBUG { foreign import sokol_glue_clib "../sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_glue_clib "../sokol_dll_windows_x64_d3d11_release.lib" }
+                when DEBUG { foreign import sokol_glue_clib "../windows_x64/sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_glue_clib "../windows_x64/sokol_dll_windows_x64_d3d11_release.lib" }
             }
         } else {
             when USE_GL {
-                when DEBUG { foreign import sokol_glue_clib "sokol_glue_windows_x64_gl_debug.lib" } else { foreign import sokol_glue_clib "sokol_glue_windows_x64_gl_release.lib" }
+                when DEBUG { foreign import sokol_glue_clib "windows_x64/sokol_glue_windows_x64_gl_debug.lib" } else { foreign import sokol_glue_clib "windows_x64/sokol_glue_windows_x64_gl_release.lib" }
             } else {
-                when DEBUG { foreign import sokol_glue_clib "sokol_glue_windows_x64_d3d11_debug.lib" } else { foreign import sokol_glue_clib "sokol_glue_windows_x64_d3d11_release.lib" }
+                when DEBUG { foreign import sokol_glue_clib "windows_x64/sokol_glue_windows_x64_d3d11_debug.lib" } else { foreign import sokol_glue_clib "windows_x64/sokol_glue_windows_x64_d3d11_release.lib" }
             }
         }
     } else {
@@ -129,34 +129,34 @@ when ODIN_OS == .Windows {
 } else when ODIN_OS == .Darwin {
     when USE_DLL {
         when USE_GL && ODIN_ARCH ==
-            .arm64 && DEBUG { foreign import sokol_glue_clib "../dylib/sokol_dylib_macos_arm64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_glue_clib "../dylib/sokol_dylib_macos_arm64_gl_release.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_glue_clib "../dylib/sokol_dylib_macos_x64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_glue_clib "../dylib/sokol_dylib_macos_x64_gl_release.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && DEBUG { foreign import sokol_glue_clib "../dylib/sokol_dylib_macos_arm64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_glue_clib "../dylib/sokol_dylib_macos_arm64_metal_release.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_glue_clib "../dylib/sokol_dylib_macos_x64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_glue_clib "../dylib/sokol_dylib_macos_x64_metal_release.dylib" }
+            .arm64 && DEBUG { foreign import sokol_glue_clib "../darwin_arm64/sokol_dylib_macos_arm64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_glue_clib "../darwin_arm64/sokol_dylib_macos_arm64_gl_release.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_glue_clib "../darwin_x64/sokol_dylib_macos_x64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_glue_clib "../darwin_x64/sokol_dylib_macos_x64_gl_release.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && DEBUG { foreign import sokol_glue_clib "../darwin_arm64/sokol_dylib_macos_arm64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_glue_clib "../darwin_arm64/sokol_dylib_macos_arm64_metal_release.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_glue_clib "../darwin_x64/sokol_dylib_macos_x64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_glue_clib "../darwin_x64/sokol_dylib_macos_x64_metal_release.dylib" }
     } else {
         when USE_GL {
             when ODIN_ARCH == .arm64 {
-                when DEBUG { foreign import sokol_glue_clib "sokol_glue_macos_arm64_gl_debug.a" } else { foreign import sokol_glue_clib "sokol_glue_macos_arm64_gl_release.a" }
+                when DEBUG { foreign import sokol_glue_clib "darwin_arm64/sokol_glue_macos_arm64_gl_debug.a" } else { foreign import sokol_glue_clib "darwin_arm64/sokol_glue_macos_arm64_gl_release.a" }
             } else {
-                when DEBUG { foreign import sokol_glue_clib "sokol_glue_macos_x64_gl_debug.a" } else { foreign import sokol_glue_clib "sokol_glue_macos_x64_gl_release.a" }
+                when DEBUG { foreign import sokol_glue_clib "darwin_x64/sokol_glue_macos_x64_gl_debug.a" } else { foreign import sokol_glue_clib "darwin_x64/sokol_glue_macos_x64_gl_release.a" }
             }
         } else {
             when ODIN_ARCH == .arm64 {
-                when DEBUG { foreign import sokol_glue_clib "sokol_glue_macos_arm64_metal_debug.a" } else { foreign import sokol_glue_clib "sokol_glue_macos_arm64_metal_release.a" }
+                when DEBUG { foreign import sokol_glue_clib "darwin_arm64/sokol_glue_macos_arm64_metal_debug.a" } else { foreign import sokol_glue_clib "darwin_arm64/sokol_glue_macos_arm64_metal_release.a" }
             } else {
-                when DEBUG { foreign import sokol_glue_clib "sokol_glue_macos_x64_metal_debug.a" } else { foreign import sokol_glue_clib "sokol_glue_macos_x64_metal_release.a" }
+                when DEBUG { foreign import sokol_glue_clib "darwin_x64/sokol_glue_macos_x64_metal_debug.a" } else { foreign import sokol_glue_clib "darwin_x64/sokol_glue_macos_x64_metal_release.a" }
             }
         }
     }
 } else when ODIN_OS == .Linux {
     when ODIN_ARCH == .amd64 {
         when USE_DLL {
-            when DEBUG { foreign import sokol_glue_clib "sokol_glue_linux_x64_gl_debug.so" } else { foreign import sokol_glue_clib "sokol_glue_linux_x64_gl_release.so" }
+            when DEBUG { foreign import sokol_glue_clib "linux_x64/sokol_glue_linux_x64_gl_debug.so" } else { foreign import sokol_glue_clib "linux_x64/sokol_glue_linux_x64_gl_release.so" }
         } else {
-            when DEBUG { foreign import sokol_glue_clib "sokol_glue_linux_x64_gl_debug.a" } else { foreign import sokol_glue_clib "sokol_glue_linux_x64_gl_release.a" }
+            when DEBUG { foreign import sokol_glue_clib "linux_x64/sokol_glue_linux_x64_gl_debug.a" } else { foreign import sokol_glue_clib "linux_x64/sokol_glue_linux_x64_gl_release.a" }
         }
     } else when ODIN_ARCH == .arm64 {
         when USE_DLL {
-            when DEBUG { foreign import sokol_glue_clib "sokol_glue_linux_arm64_gl_debug.so" } else { foreign import sokol_glue_clib "sokol_glue_linux_arm64_gl_release.so" }
+            when DEBUG { foreign import sokol_glue_clib "linux_arm64/sokol_glue_linux_arm64_gl_debug.so" } else { foreign import sokol_glue_clib "linux_arm64/sokol_glue_linux_arm64_gl_release.so" }
         } else {
-            when DEBUG { foreign import sokol_glue_clib "sokol_glue_linux_arm64_gl_debug.a" } else { foreign import sokol_glue_clib "sokol_glue_linux_arm64_gl_release.a" }
+            when DEBUG { foreign import sokol_glue_clib "linux_arm64/sokol_glue_linux_arm64_gl_debug.a" } else { foreign import sokol_glue_clib "linux_arm64/sokol_glue_linux_arm64_gl_release.a" }
         }
     } else {
         #panic("This architecture is currently not supported on Linux")

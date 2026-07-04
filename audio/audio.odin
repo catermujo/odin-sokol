@@ -582,34 +582,34 @@ when ODIN_OS == .Windows {
 } else when ODIN_OS == .Darwin {
     when USE_DLL {
         when USE_GL && ODIN_ARCH ==
-            .arm64 && DEBUG { foreign import sokol_audio_clib "../dylib/sokol_dylib_macos_arm64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_audio_clib "../dylib/sokol_dylib_macos_arm64_gl_release.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_audio_clib "../dylib/sokol_dylib_macos_x64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_audio_clib "../dylib/sokol_dylib_macos_x64_gl_release.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && DEBUG { foreign import sokol_audio_clib "../dylib/sokol_dylib_macos_arm64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_audio_clib "../dylib/sokol_dylib_macos_arm64_metal_release.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_audio_clib "../dylib/sokol_dylib_macos_x64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_audio_clib "../dylib/sokol_dylib_macos_x64_metal_release.dylib" }
+            .arm64 && DEBUG { foreign import sokol_audio_clib "../darwin_arm64/sokol_dylib_macos_arm64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_audio_clib "../darwin_arm64/sokol_dylib_macos_arm64_gl_release.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_audio_clib "../darwin_x64/sokol_dylib_macos_x64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_audio_clib "../darwin_x64/sokol_dylib_macos_x64_gl_release.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && DEBUG { foreign import sokol_audio_clib "../darwin_arm64/sokol_dylib_macos_arm64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_audio_clib "../darwin_arm64/sokol_dylib_macos_arm64_metal_release.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_audio_clib "../darwin_x64/sokol_dylib_macos_x64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_audio_clib "../darwin_x64/sokol_dylib_macos_x64_metal_release.dylib" }
     } else {
         when USE_GL {
             when ODIN_ARCH == .arm64 {
-                when DEBUG { foreign import sokol_audio_clib {"sokol_audio_macos_arm64_gl_debug.a", "system:AudioToolbox.framework"} } else { foreign import sokol_audio_clib {"sokol_audio_macos_arm64_gl_release.a", "system:AudioToolbox.framework"} }
+                when DEBUG { foreign import sokol_audio_clib {"darwin_arm64/sokol_audio_macos_arm64_gl_debug.a", "system:AudioToolbox.framework"} } else { foreign import sokol_audio_clib {"darwin_arm64/sokol_audio_macos_arm64_gl_release.a", "system:AudioToolbox.framework"} }
             } else {
-                when DEBUG { foreign import sokol_audio_clib {"sokol_audio_macos_x64_gl_debug.a", "system:AudioToolbox.framework"} } else { foreign import sokol_audio_clib {"sokol_audio_macos_x64_gl_release.a", "system:AudioToolbox.framework"} }
+                when DEBUG { foreign import sokol_audio_clib {"darwin_x64/sokol_audio_macos_x64_gl_debug.a", "system:AudioToolbox.framework"} } else { foreign import sokol_audio_clib {"darwin_x64/sokol_audio_macos_x64_gl_release.a", "system:AudioToolbox.framework"} }
             }
         } else {
             when ODIN_ARCH == .arm64 {
-                when DEBUG { foreign import sokol_audio_clib {"sokol_audio_macos_arm64_metal_debug.a", "system:AudioToolbox.framework"} } else { foreign import sokol_audio_clib {"sokol_audio_macos_arm64_metal_release.a", "system:AudioToolbox.framework"} }
+                when DEBUG { foreign import sokol_audio_clib {"darwin_arm64/sokol_audio_macos_arm64_metal_debug.a", "system:AudioToolbox.framework"} } else { foreign import sokol_audio_clib {"darwin_arm64/sokol_audio_macos_arm64_metal_release.a", "system:AudioToolbox.framework"} }
             } else {
-                when DEBUG { foreign import sokol_audio_clib {"sokol_audio_macos_x64_metal_debug.a", "system:AudioToolbox.framework"} } else { foreign import sokol_audio_clib {"sokol_audio_macos_x64_metal_release.a", "system:AudioToolbox.framework"} }
+                when DEBUG { foreign import sokol_audio_clib {"darwin_x64/sokol_audio_macos_x64_metal_debug.a", "system:AudioToolbox.framework"} } else { foreign import sokol_audio_clib {"darwin_x64/sokol_audio_macos_x64_metal_release.a", "system:AudioToolbox.framework"} }
             }
         }
     }
 } else when ODIN_OS == .Linux {
     when ODIN_ARCH == .amd64 {
         when USE_DLL {
-            when DEBUG { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_debug.so", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_release.so", "system:dl", "system:pthread"} }
+            when DEBUG { foreign import sokol_audio_clib {"linux_x64/sokol_audio_linux_x64_gl_debug.so", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"linux_x64/sokol_audio_linux_x64_gl_release.so", "system:dl", "system:pthread"} }
         } else {
-            when DEBUG { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_debug.a", "system:asound", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"sokol_audio_linux_x64_gl_release.a", "system:asound", "system:dl", "system:pthread"} }
+            when DEBUG { foreign import sokol_audio_clib {"linux_x64/sokol_audio_linux_x64_gl_debug.a", "system:asound", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"linux_x64/sokol_audio_linux_x64_gl_release.a", "system:asound", "system:dl", "system:pthread"} }
         }
     } else when ODIN_ARCH == .arm64 {
         when USE_DLL {
-            when DEBUG { foreign import sokol_audio_clib {"sokol_audio_linux_arm64_gl_debug.so", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"sokol_audio_linux_arm64_gl_release.so", "system:dl", "system:pthread"} }
+            when DEBUG { foreign import sokol_audio_clib {"linux_arm64/sokol_audio_linux_arm64_gl_debug.so", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"linux_arm64/sokol_audio_linux_arm64_gl_release.so", "system:dl", "system:pthread"} }
         } else {
-            when DEBUG { foreign import sokol_audio_clib {"sokol_audio_linux_arm64_gl_debug.a", "system:asound", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"sokol_audio_linux_arm64_gl_release.a", "system:asound", "system:dl", "system:pthread"} }
+            when DEBUG { foreign import sokol_audio_clib {"linux_arm64/sokol_audio_linux_arm64_gl_debug.a", "system:asound", "system:dl", "system:pthread"} } else { foreign import sokol_audio_clib {"linux_arm64/sokol_audio_linux_arm64_gl_release.a", "system:asound", "system:dl", "system:pthread"} }
         }
     } else {
         #panic("This architecture is currently not supported on Linux")
