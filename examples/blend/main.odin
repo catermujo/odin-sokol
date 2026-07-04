@@ -26,13 +26,11 @@ state: struct {
 
 init :: proc "c" () {
     context = runtime.default_context()
-    sg.setup(
-        {
-            pipeline_pool_size = NUM_BLEND_FACTORS * NUM_BLEND_FACTORS + 1,
-            environment = sglue.environment(),
-            logger = {func = slog.func},
-        },
-    )
+    sg.setup({
+        pipeline_pool_size = NUM_BLEND_FACTORS * NUM_BLEND_FACTORS + 1,
+        environment = sglue.environment(),
+        logger = {func = slog.func},
+    })
 
     // a default pass action which does not clear, since the entire screen is overwritten anyway
     state.pass_action = {
@@ -77,14 +75,14 @@ init :: proc "c" () {
 
     // shader and pipeline object for rendering the background quad
     state.bg_pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(bg_shader_desc(sg.query_backend())),
-            // we use the same vertex buffer as for the colored 3D quads,
-            // but only the first two floats from the position, need to
-            // provide a stride to skip the gap to the next vertex
-            layout = {buffers = {0 = {stride = 28}}, attrs = {ATTR_bg_position = {format = .FLOAT2}}},
-            primitive_type = .TRIANGLE_STRIP,
-        },
+    {
+        shader = sg.make_shader(bg_shader_desc(sg.query_backend())),
+        // we use the same vertex buffer as for the colored 3D quads,
+        // but only the first two floats from the position, need to
+        // provide a stride to skip the gap to the next vertex
+        layout = {buffers = {0 = {stride = 28}}, attrs = {ATTR_bg_position = {format = .FLOAT2}}},
+        primitive_type = .TRIANGLE_STRIP,
+    },
     )
 
     // a shader for the blended quads
@@ -159,18 +157,15 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            sample_count = 4,
-            window_title = "blend",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        sample_count = 4,
+        window_title = "blend",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

@@ -46,18 +46,13 @@ init :: proc "c" () {
     )
 
     // a shader and pipeline to render 2D shapes
-    state.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(bufferoffsets_shader_desc(sg.query_backend())),
-            index_type = .UINT16,
-            layout = {
-                attrs = {
-                    ATTR_bufferoffsets_position = {format = .FLOAT2},
-                    ATTR_bufferoffsets_color0 = {format = .FLOAT3},
-                },
-            },
+    state.pip = sg.make_pipeline({
+        shader = sg.make_shader(bufferoffsets_shader_desc(sg.query_backend())),
+        index_type = .UINT16,
+        layout = {
+            attrs = {ATTR_bufferoffsets_position = {format = .FLOAT2}, ATTR_bufferoffsets_color0 = {format = .FLOAT3}},
         },
-    )
+    })
 
     // pass action for clearing to blue-ish
     state.pass_action = {
@@ -89,16 +84,13 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            window_title = "bufferoffsets",
-            icon = {sokol_default = true},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        window_title = "bufferoffsets",
+        icon = {sokol_default = true},
+    })
 }
-

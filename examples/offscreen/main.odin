@@ -51,24 +51,20 @@ init :: proc "c" () {
     }
 
     // setup the color- and depth-stencil-attachment images and views
-    color_img := sg.make_image(
-        {
-            usage = {color_attachment = true},
-            width = OFFSCREEN_WIDTH,
-            height = OFFSCREEN_HEIGHT,
-            pixel_format = .RGBA8,
-            sample_count = OFFSCREEN_SAMPLE_COUNT,
-        },
-    )
-    depth_img := sg.make_image(
-        {
-            usage = {depth_stencil_attachment = true},
-            width = OFFSCREEN_WIDTH,
-            height = OFFSCREEN_HEIGHT,
-            sample_count = OFFSCREEN_SAMPLE_COUNT,
-            pixel_format = .DEPTH,
-        },
-    )
+    color_img := sg.make_image({
+        usage = {color_attachment = true},
+        width = OFFSCREEN_WIDTH,
+        height = OFFSCREEN_HEIGHT,
+        pixel_format = .RGBA8,
+        sample_count = OFFSCREEN_SAMPLE_COUNT,
+    })
+    depth_img := sg.make_image({
+        usage = {depth_stencil_attachment = true},
+        width = OFFSCREEN_WIDTH,
+        height = OFFSCREEN_HEIGHT,
+        sample_count = OFFSCREEN_SAMPLE_COUNT,
+        pixel_format = .DEPTH,
+    })
 
     // the offscreen render passes need a color- and depth-stencil-attachment view
     state.offscreen.pass.attachments.colors[0] = sg.make_view({color_attachment = {image = color_img}})
@@ -98,41 +94,37 @@ init :: proc "c" () {
     state.display.bind.index_buffer = ibuf
 
     // pipeline-state-object for offscreen-rendered donut, don't need texture coord here
-    state.offscreen.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(offscreen_shader_desc(sg.query_backend())),
-            layout = {
-                buffers = {0 = sshape.vertex_buffer_layout_state()},
-                attrs = {
-                    ATTR_offscreen_position = sshape.position_vertex_attr_state(),
-                    ATTR_offscreen_normal = sshape.normal_vertex_attr_state(),
-                },
+    state.offscreen.pip = sg.make_pipeline({
+        shader = sg.make_shader(offscreen_shader_desc(sg.query_backend())),
+        layout = {
+            buffers = {0 = sshape.vertex_buffer_layout_state()},
+            attrs = {
+                ATTR_offscreen_position = sshape.position_vertex_attr_state(),
+                ATTR_offscreen_normal = sshape.normal_vertex_attr_state(),
             },
-            index_type = .UINT16,
-            cull_mode = .BACK,
-            sample_count = OFFSCREEN_SAMPLE_COUNT,
-            depth = {pixel_format = .DEPTH, compare = .LESS_EQUAL, write_enabled = true},
-            colors = {0 = {pixel_format = .RGBA8}},
         },
-    )
+        index_type = .UINT16,
+        cull_mode = .BACK,
+        sample_count = OFFSCREEN_SAMPLE_COUNT,
+        depth = {pixel_format = .DEPTH, compare = .LESS_EQUAL, write_enabled = true},
+        colors = {0 = {pixel_format = .RGBA8}},
+    })
 
     // and another pipeline-state-object for the default pass
-    state.display.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(default_shader_desc(sg.query_backend())),
-            layout = {
-                buffers = {0 = sshape.vertex_buffer_layout_state()},
-                attrs = {
-                    ATTR_default_position = sshape.position_vertex_attr_state(),
-                    ATTR_default_normal = sshape.normal_vertex_attr_state(),
-                    ATTR_default_texcoord0 = sshape.texcoord_vertex_attr_state(),
-                },
+    state.display.pip = sg.make_pipeline({
+        shader = sg.make_shader(default_shader_desc(sg.query_backend())),
+        layout = {
+            buffers = {0 = sshape.vertex_buffer_layout_state()},
+            attrs = {
+                ATTR_default_position = sshape.position_vertex_attr_state(),
+                ATTR_default_normal = sshape.normal_vertex_attr_state(),
+                ATTR_default_texcoord0 = sshape.texcoord_vertex_attr_state(),
             },
-            index_type = .UINT16,
-            cull_mode = .BACK,
-            depth = {compare = .LESS_EQUAL, write_enabled = true},
         },
-    )
+        index_type = .UINT16,
+        cull_mode = .BACK,
+        depth = {compare = .LESS_EQUAL, write_enabled = true},
+    })
 
     // a sampler object for sampling the render target as texture
     state.display.bind.samplers[SMP_smp] = sg.make_sampler(
@@ -194,18 +186,15 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            sample_count = 4,
-            window_title = "offscreen",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        sample_count = 4,
+        window_title = "offscreen",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

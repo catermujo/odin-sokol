@@ -240,17 +240,17 @@ init :: proc "c" () {
 
     // shader and pipeline object
     state.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(cube_shader_desc(sg.query_backend())),
-            layout = {
-                // test to provide buffer stride, but no attr offsets
-                buffers = {0 = {stride = 28}},
-                attrs = {ATTR_cube_position = {format = .FLOAT3}, ATTR_cube_color0 = {format = .FLOAT4}},
-            },
-            index_type = .UINT16,
-            cull_mode = .BACK,
-            depth = {write_enabled = true, compare = .LESS_EQUAL},
+    {
+        shader = sg.make_shader(cube_shader_desc(sg.query_backend())),
+        layout = {
+            // test to provide buffer stride, but no attr offsets
+            buffers = {0 = {stride = 28}},
+            attrs = {ATTR_cube_position = {format = .FLOAT3}, ATTR_cube_color0 = {format = .FLOAT4}},
         },
+        index_type = .UINT16,
+        cull_mode = .BACK,
+        depth = {write_enabled = true, compare = .LESS_EQUAL},
+    },
     )
 }
 
@@ -292,18 +292,15 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            sample_count = 4,
-            window_title = "cube",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        sample_count = 4,
+        window_title = "cube",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

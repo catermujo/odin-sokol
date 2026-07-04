@@ -127,35 +127,31 @@ init :: proc "c" () {
         0xFFFFFFFF,
     }
     // NOTE: VIEW_tex is provided by shader code generation
-    state.bind.views[VIEW_tex] = sg.make_view(
-        {
-            texture = {
-                image = sg.make_image(
-                    {width = 4, height = 4, data = {mip_levels = {0 = {ptr = &pixels, size = size_of(pixels)}}}},
-                ),
-            },
+    state.bind.views[VIEW_tex] = sg.make_view({
+        texture = {
+            image = sg.make_image(
+                {width = 4, height = 4, data = {mip_levels = {0 = {ptr = &pixels, size = size_of(pixels)}}}},
+            ),
         },
-    )
+    })
 
     // a sampler with default options to sample the above image as texture
     state.bind.samplers[SMP_smp] = sg.make_sampler({})
 
     // shader and pipeline object
-    state.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(texcube_shader_desc(sg.query_backend())),
-            layout = {
-                attrs = {
-                    ATTR_texcube_pos = {format = .FLOAT3},
-                    ATTR_texcube_color0 = {format = .UBYTE4N},
-                    ATTR_texcube_texcoord0 = {format = .SHORT2N},
-                },
+    state.pip = sg.make_pipeline({
+        shader = sg.make_shader(texcube_shader_desc(sg.query_backend())),
+        layout = {
+            attrs = {
+                ATTR_texcube_pos = {format = .FLOAT3},
+                ATTR_texcube_color0 = {format = .UBYTE4N},
+                ATTR_texcube_texcoord0 = {format = .SHORT2N},
             },
-            index_type = .UINT16,
-            cull_mode = .BACK,
-            depth = {compare = .LESS_EQUAL, write_enabled = true},
         },
-    )
+        index_type = .UINT16,
+        cull_mode = .BACK,
+        depth = {compare = .LESS_EQUAL, write_enabled = true},
+    })
 
     // default pass action, clear to blue-ish
     state.pass_action = {
@@ -199,18 +195,15 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            sample_count = 4,
-            window_title = "texcube",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        sample_count = 4,
+        window_title = "texcube",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

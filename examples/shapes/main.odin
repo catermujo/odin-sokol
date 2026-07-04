@@ -51,23 +51,21 @@ init :: proc "c" () {
     }
 
     // shader and pipeline object
-    state.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(shapes_shader_desc(sg.query_backend())),
-            layout = {
-                buffers = {0 = sshape.vertex_buffer_layout_state()},
-                attrs = {
-                    ATTR_shapes_position = sshape.position_vertex_attr_state(),
-                    ATTR_shapes_normal = sshape.normal_vertex_attr_state(),
-                    ATTR_shapes_texcoord = sshape.texcoord_vertex_attr_state(),
-                    ATTR_shapes_color0 = sshape.color_vertex_attr_state(),
-                },
+    state.pip = sg.make_pipeline({
+        shader = sg.make_shader(shapes_shader_desc(sg.query_backend())),
+        layout = {
+            buffers = {0 = sshape.vertex_buffer_layout_state()},
+            attrs = {
+                ATTR_shapes_position = sshape.position_vertex_attr_state(),
+                ATTR_shapes_normal = sshape.normal_vertex_attr_state(),
+                ATTR_shapes_texcoord = sshape.texcoord_vertex_attr_state(),
+                ATTR_shapes_color0 = sshape.color_vertex_attr_state(),
             },
-            index_type = .UINT16,
-            cull_mode = .NONE,
-            depth = {compare = .LESS_EQUAL, write_enabled = true},
         },
-    )
+        index_type = .UINT16,
+        cull_mode = .NONE,
+        depth = {compare = .LESS_EQUAL, write_enabled = true},
+    })
 
     // shape positions
     state.shapes[BOX].pos = {-1.0, 1.0, 0.0}
@@ -163,19 +161,16 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            event_cb = input,
-            width = 800,
-            height = 600,
-            sample_count = 4,
-            window_title = "shapes",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        event_cb = input,
+        width = 800,
+        height = 600,
+        sample_count = 4,
+        window_title = "shapes",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

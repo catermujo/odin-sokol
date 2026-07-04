@@ -98,23 +98,23 @@ init :: proc "c" () {
 
     // a shader and pipeline object
     state.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(instancing_shader_desc(sg.query_backend())),
-            layout = {
-                buffers = {
-                    // vertex buffer at slot 1 must step per instance
-                    1 = {step_func = .PER_INSTANCE},
-                },
-                attrs = {
-                    ATTR_instancing_pos = {format = .FLOAT3, buffer_index = 0},
-                    ATTR_instancing_color0 = {format = .FLOAT4, buffer_index = 0},
-                    ATTR_instancing_inst_pos = {format = .FLOAT3, buffer_index = 1},
-                },
+    {
+        shader = sg.make_shader(instancing_shader_desc(sg.query_backend())),
+        layout = {
+            buffers = {
+                // vertex buffer at slot 1 must step per instance
+                1 = {step_func = .PER_INSTANCE},
             },
-            index_type = .UINT16,
-            cull_mode = .BACK,
-            depth = {compare = .LESS_EQUAL, write_enabled = true},
+            attrs = {
+                ATTR_instancing_pos = {format = .FLOAT3, buffer_index = 0},
+                ATTR_instancing_color0 = {format = .FLOAT4, buffer_index = 0},
+                ATTR_instancing_inst_pos = {format = .FLOAT3, buffer_index = 1},
+            },
         },
+        index_type = .UINT16,
+        cull_mode = .BACK,
+        depth = {compare = .LESS_EQUAL, write_enabled = true},
+    },
     )
 }
 
@@ -176,19 +176,17 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            sample_count = 4,
-            window_title = "instancing",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        sample_count = 4,
+        window_title = "instancing",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
 
 xorshift32 :: proc() -> u32 {
@@ -203,4 +201,3 @@ rand :: proc(min_val, max_val: f32) -> f32 {
     r := xorshift32()
     return (f32(r & 0xFFFF) / 0x10000) * (max_val - min_val) + min_val
 }
-

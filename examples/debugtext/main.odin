@@ -29,19 +29,17 @@ init :: proc "c" () {
     context = runtime.default_context()
 
     sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
-    sdtx.setup(
-        {
-            fonts = {
-                FONT_KC853 = sdtx.font_kc853(),
-                FONT_KC854 = sdtx.font_kc854(),
-                FONT_Z1013 = sdtx.font_z1013(),
-                FONT_CPC = sdtx.font_cpc(),
-                FONT_C64 = sdtx.font_c64(),
-                FONT_ORIC = sdtx.font_oric(),
-            },
-            logger = {func = slog.func},
+    sdtx.setup({
+        fonts = {
+            FONT_KC853 = sdtx.font_kc853(),
+            FONT_KC854 = sdtx.font_kc854(),
+            FONT_Z1013 = sdtx.font_z1013(),
+            FONT_CPC = sdtx.font_cpc(),
+            FONT_C64 = sdtx.font_c64(),
+            FONT_ORIC = sdtx.font_oric(),
         },
-    )
+        logger = {func = slog.func},
+    })
 }
 
 print_font :: proc(font_index: int, title: cstring, r, g, b: u8) {
@@ -85,17 +83,14 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 1024,
-            height = 600,
-            window_title = "debugtext",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 1024,
+        height = 600,
+        window_title = "debugtext",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

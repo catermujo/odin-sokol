@@ -50,26 +50,22 @@ init :: proc "c" () {
 
     // create a sokol-gl context compatible with the offscreen render pass
     // (specific color pixel format, no depth-stencil-surface, no MSAA)
-    state.offscreen.sgl_ctx = sgl.make_context(
-        {
-            max_vertices = 8,
-            max_commands = 4,
-            color_format = OFFSCREEN_PIXELFORMAT,
-            depth_format = .NONE,
-            sample_count = OFFSCREEN_SAMPLECOUNT,
-        },
-    )
+    state.offscreen.sgl_ctx = sgl.make_context({
+        max_vertices = 8,
+        max_commands = 4,
+        color_format = OFFSCREEN_PIXELFORMAT,
+        depth_format = .NONE,
+        sample_count = OFFSCREEN_SAMPLECOUNT,
+    })
 
     // create an color-attachment image for the offscreen pass and associated views
-    img := sg.make_image(
-        {
-            usage = {color_attachment = true},
-            width = OFFSCREEN_WIDTH,
-            height = OFFSCREEN_HEIGHT,
-            pixel_format = OFFSCREEN_PIXELFORMAT,
-            sample_count = OFFSCREEN_SAMPLECOUNT,
-        },
-    )
+    img := sg.make_image({
+        usage = {color_attachment = true},
+        width = OFFSCREEN_WIDTH,
+        height = OFFSCREEN_HEIGHT,
+        pixel_format = OFFSCREEN_PIXELFORMAT,
+        sample_count = OFFSCREEN_SAMPLECOUNT,
+    })
     state.offscreen.pass.attachments.colors[0] = sg.make_view({color_attachment = {image = img}})
     state.display.tex_view = sg.make_view({texture = {image = img}})
 
@@ -164,18 +160,15 @@ draw_cube :: proc() {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            sample_count = 4,
-            window_title = "sgl-context",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        sample_count = 4,
+        window_title = "sgl-context",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

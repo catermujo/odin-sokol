@@ -50,14 +50,10 @@ init :: proc "c" () {
     state.bind.vertex_buffers[0] = sg.make_buffer({data = {ptr = &vertices, size = size_of(vertices)}})
 
     // create a shader and pipeline object (default render states are fine for triangle)
-    state.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(triangle_shader_desc(sg.query_backend())),
-            layout = {
-                attrs = {ATTR_triangle_position = {format = .FLOAT3}, ATTR_triangle_color0 = {format = .FLOAT4}},
-            },
-        },
-    )
+    state.pip = sg.make_pipeline({
+        shader = sg.make_shader(triangle_shader_desc(sg.query_backend())),
+        layout = {attrs = {ATTR_triangle_position = {format = .FLOAT3}, ATTR_triangle_color0 = {format = .FLOAT4}}},
+    })
 
     // a pass action to clear framebuffer to black
     state.pass_action = {
@@ -82,17 +78,14 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 640,
-            height = 480,
-            window_title = "triangle",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 640,
+        height = 480,
+        window_title = "triangle",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

@@ -51,18 +51,12 @@ init :: proc "c" () {
     // setup sokol-debugtext with the user font as the only font,
     // NOTE that the user font only provides pixel data for the
     // characters 0x20 to 0x9F inclusive
-    sdtx.setup(
-        {
-            fonts = {
-                USER_FONT = {
-                    data = {ptr = &user_font, size = size_of(user_font)},
-                    first_char = 0x20,
-                    last_char = 0x9F,
-                },
-            },
-            logger = {func = slog.func},
+    sdtx.setup({
+        fonts = {
+            USER_FONT = {data = {ptr = &user_font, size = size_of(user_font)}, first_char = 0x20, last_char = 0x9F},
         },
-    )
+        logger = {func = slog.func},
+    })
 }
 
 frame :: proc "c" () {
@@ -98,18 +92,16 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            window_title = "debugtext-userfont",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        window_title = "debugtext-userfont",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
 
 // Font data extracted from Atari 400 ROM at address 0xE000,
@@ -1141,4 +1133,3 @@ user_font := [128 * 8]u8 {
     0x00,
     0x00, // 9F
 }
-

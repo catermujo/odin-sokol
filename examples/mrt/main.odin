@@ -74,15 +74,13 @@ recreate_offscreen_attachments :: proc(width, height: i32) {
 
     // depth-stencil attachment image and view
     sg.destroy_image(state.images.depth)
-    state.images.depth = sg.make_image(
-        {
-            usage = {depth_stencil_attachment = true},
-            width = width,
-            height = height,
-            sample_count = OFFSCREEN_SAMPLE_COUNT,
-            pixel_format = .DEPTH,
-        },
-    )
+    state.images.depth = sg.make_image({
+        usage = {depth_stencil_attachment = true},
+        width = width,
+        height = height,
+        sample_count = OFFSCREEN_SAMPLE_COUNT,
+        pixel_format = .DEPTH,
+    })
     sg.destroy_view(state.offscreen.pass.attachments.depth_stencil)
     state.offscreen.pass.attachments.depth_stencil = sg.make_view(
         {depth_stencil_attachment = {image = state.images.depth}},
@@ -187,23 +185,21 @@ init :: proc "c" () {
     )
 
     // shader and pipeline object for offscreen-renderer cube
-    state.offscreen.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(offscreen_shader_desc(sg.query_backend())),
-            layout = {
-                buffers = {0 = {stride = size_of(Vertex)}},
-                attrs = {
-                    ATTR_offscreen_pos = {offset = i32(offset_of(Vertex, x)), format = .FLOAT3},
-                    ATTR_offscreen_bright0 = {offset = i32(offset_of(Vertex, b)), format = .FLOAT},
-                },
+    state.offscreen.pip = sg.make_pipeline({
+        shader = sg.make_shader(offscreen_shader_desc(sg.query_backend())),
+        layout = {
+            buffers = {0 = {stride = size_of(Vertex)}},
+            attrs = {
+                ATTR_offscreen_pos = {offset = i32(offset_of(Vertex, x)), format = .FLOAT3},
+                ATTR_offscreen_bright0 = {offset = i32(offset_of(Vertex, b)), format = .FLOAT},
             },
-            index_type = .UINT16,
-            cull_mode = .BACK,
-            sample_count = OFFSCREEN_SAMPLE_COUNT,
-            depth = {pixel_format = .DEPTH, compare = .LESS_EQUAL, write_enabled = true},
-            color_count = 3,
         },
-    )
+        index_type = .UINT16,
+        cull_mode = .BACK,
+        sample_count = OFFSCREEN_SAMPLE_COUNT,
+        depth = {pixel_format = .DEPTH, compare = .LESS_EQUAL, write_enabled = true},
+        color_count = 3,
+    })
 
     // a vertex buffer to render a fullscreen rectangle
     quad_vertices := [?]f32{0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0}
@@ -212,13 +208,11 @@ init :: proc "c" () {
     state.dbg.bind.vertex_buffers[0] = quad_vbuf
 
     // shader and pipeline object to render the fullscreen quad
-    state.display.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(fsq_shader_desc(sg.query_backend())),
-            layout = {attrs = {ATTR_fsq_pos = {format = .FLOAT2}}},
-            primitive_type = .TRIANGLE_STRIP,
-        },
-    )
+    state.display.pip = sg.make_pipeline({
+        shader = sg.make_shader(fsq_shader_desc(sg.query_backend())),
+        layout = {attrs = {ATTR_fsq_pos = {format = .FLOAT2}}},
+        primitive_type = .TRIANGLE_STRIP,
+    })
 
     // a sampler object to sample the offscreen render target as texture
     smp := sg.make_sampler(
@@ -228,13 +222,11 @@ init :: proc "c" () {
     state.dbg.bind.samplers[SMP_smp] = smp
 
     // pipeline and resource bindings to render debug-visualization quads
-    state.dbg.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(dbg_shader_desc(sg.query_backend())),
-            layout = {attrs = {ATTR_dbg_pos = {format = .FLOAT2}}},
-            primitive_type = .TRIANGLE_STRIP,
-        },
-    )
+    state.dbg.pip = sg.make_pipeline({
+        shader = sg.make_shader(dbg_shader_desc(sg.query_backend())),
+        layout = {attrs = {ATTR_dbg_pos = {format = .FLOAT2}}},
+        primitive_type = .TRIANGLE_STRIP,
+    })
 }
 
 frame :: proc "c" () {
@@ -299,19 +291,16 @@ event :: proc "c" (ev: ^sapp.Event) {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            event_cb = event,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            sample_count = 4,
-            window_title = "mrt",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        event_cb = event,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        sample_count = 4,
+        window_title = "mrt",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

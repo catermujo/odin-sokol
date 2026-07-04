@@ -114,14 +114,12 @@ init :: proc "c" () {
     )
 
     // a shader and pipeline object, not that there is no vertex layout definition
-    state.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(vertexpull_shader_desc(sg.query_backend())),
-            index_type = .UINT16,
-            cull_mode = .BACK,
-            depth = {write_enabled = true, compare = .LESS_EQUAL},
-        },
-    )
+    state.pip = sg.make_pipeline({
+        shader = sg.make_shader(vertexpull_shader_desc(sg.query_backend())),
+        index_type = .UINT16,
+        cull_mode = .BACK,
+        depth = {write_enabled = true, compare = .LESS_EQUAL},
+    })
 }
 
 frame :: proc "c" () {
@@ -162,18 +160,15 @@ compute_mvp :: proc(rx, ry: f32) -> m.mat4 {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            sample_count = 4,
-            window_title = "vertexpull",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        sample_count = 4,
+        window_title = "vertexpull",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

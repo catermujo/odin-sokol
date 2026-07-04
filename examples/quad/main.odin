@@ -63,13 +63,11 @@ init :: proc "c" () {
     )
 
     // a shader and pipeline object
-    state.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(quad_shader_desc(sg.query_backend())),
-            index_type = .UINT16,
-            layout = {attrs = {ATTR_quad_position = {format = .FLOAT3}, ATTR_quad_color0 = {format = .FLOAT4}}},
-        },
-    )
+    state.pip = sg.make_pipeline({
+        shader = sg.make_shader(quad_shader_desc(sg.query_backend())),
+        index_type = .UINT16,
+        layout = {attrs = {ATTR_quad_position = {format = .FLOAT3}, ATTR_quad_color0 = {format = .FLOAT4}}},
+    })
 
     // default pass action
     state.pass_action = {
@@ -93,17 +91,14 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            window_title = "quad",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        window_title = "quad",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-

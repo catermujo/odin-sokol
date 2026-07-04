@@ -48,13 +48,11 @@ init :: proc "c" () {
     }
 
     // a buffer and storage-buffer view  for the particle state
-    sbuf := sg.make_buffer(
-        {
-            usage = {vertex_buffer = true, storage_buffer = true},
-            size = MAX_PARTICLES * size_of(Particle),
-            label = "particle-buffer",
-        },
-    )
+    sbuf := sg.make_buffer({
+        usage = {vertex_buffer = true, storage_buffer = true},
+        size = MAX_PARTICLES * size_of(Particle),
+        label = "particle-buffer",
+    })
     sbuf_view := sg.make_view({storage_buffer = {buffer = sbuf}})
     state.compute.bind.views[VIEW_cs_ssbo] = sbuf_view
     state.display.bind.views[VIEW_vs_ssbo] = sbuf_view
@@ -121,16 +119,14 @@ init :: proc "c" () {
 
     // shader and pipeline for rendering the particles, this uses
     // the compute-updated storage buffer to provide the particle positions
-    state.display.pip = sg.make_pipeline(
-        {
-            shader = sg.make_shader(display_shader_desc(sg.query_backend())),
-            layout = {attrs = {ATTR_display_pos = {format = .FLOAT3}, ATTR_display_color0 = {format = .FLOAT4}}},
-            index_type = .UINT16,
-            cull_mode = .BACK,
-            depth = {compare = .LESS_EQUAL, write_enabled = true},
-            label = "render-pipeline",
-        },
-    )
+    state.display.pip = sg.make_pipeline({
+        shader = sg.make_shader(display_shader_desc(sg.query_backend())),
+        layout = {attrs = {ATTR_display_pos = {format = .FLOAT3}, ATTR_display_color0 = {format = .FLOAT4}}},
+        index_type = .UINT16,
+        cull_mode = .BACK,
+        depth = {compare = .LESS_EQUAL, write_enabled = true},
+        label = "render-pipeline",
+    })
 
     // one-time init of particle velocities via compute shader
     pip := sg.make_pipeline({compute = true, shader = sg.make_shader(init_shader_desc(sg.query_backend()))})
@@ -186,19 +182,17 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 800,
-            height = 600,
-            sample_count = 4,
-            window_title = "instancing-compute",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 800,
+        height = 600,
+        sample_count = 4,
+        window_title = "instancing-compute",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
 
 compute_vs_params :: proc(ry: f32) -> Vs_Params {
@@ -213,4 +207,3 @@ draw_fallback :: proc() {
     sg.end_pass()
     sg.commit()
 }
-

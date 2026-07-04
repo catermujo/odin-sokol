@@ -35,12 +35,10 @@ state: struct {
 init :: proc "c" () {
     context = runtime.default_context()
     sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
-    sdtx.setup(
-        {
-            fonts = {FONT_KC854 = sdtx.font_kc854(), FONT_C64 = sdtx.font_c64(), FONT_ORIC = sdtx.font_oric()},
-            logger = {func = slog.func},
-        },
-    )
+    sdtx.setup({
+        fonts = {FONT_KC854 = sdtx.font_kc854(), FONT_C64 = sdtx.font_c64(), FONT_ORIC = sdtx.font_oric()},
+        logger = {func = slog.func},
+    })
 }
 
 frame :: proc "c" () {
@@ -75,17 +73,14 @@ cleanup :: proc "c" () {
 }
 
 main :: proc() {
-    sapp.run(
-        {
-            init_cb = init,
-            frame_cb = frame,
-            cleanup_cb = cleanup,
-            width = 640,
-            height = 480,
-            window_title = "debugtext-printf",
-            icon = {sokol_default = true},
-            logger = {func = slog.func},
-        },
-    )
+    sapp.run({
+        init_cb = init,
+        frame_cb = frame,
+        cleanup_cb = cleanup,
+        width = 640,
+        height = 480,
+        window_title = "debugtext-printf",
+        icon = {sokol_default = true},
+        logger = {func = slog.func},
+    })
 }
-
