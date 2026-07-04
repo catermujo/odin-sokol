@@ -376,66 +376,50 @@ USE_DLL :: #config(SOKOL_DLL, false)
 when ODIN_OS == .Windows {
     when USE_DLL {
         when USE_GL {
-            when DEBUG { foreign import sokol_shape_clib { "../sokol_dll_windows_x64_gl_debug.lib" } }
-            else       { foreign import sokol_shape_clib { "../sokol_dll_windows_x64_gl_release.lib" } }
+            when DEBUG { foreign import sokol_shape_clib "../sokol_dll_windows_x64_gl_debug.lib" } else { foreign import sokol_shape_clib "../sokol_dll_windows_x64_gl_release.lib" }
         } else {
-            when DEBUG { foreign import sokol_shape_clib { "../sokol_dll_windows_x64_d3d11_debug.lib" } }
-            else       { foreign import sokol_shape_clib { "../sokol_dll_windows_x64_d3d11_release.lib" } }
+            when DEBUG { foreign import sokol_shape_clib "../sokol_dll_windows_x64_d3d11_debug.lib" } else { foreign import sokol_shape_clib "../sokol_dll_windows_x64_d3d11_release.lib" }
         }
     } else {
         when USE_GL {
-            when DEBUG { foreign import sokol_shape_clib { "sokol_shape_windows_x64_gl_debug.lib" } }
-            else       { foreign import sokol_shape_clib { "sokol_shape_windows_x64_gl_release.lib" } }
+            when DEBUG { foreign import sokol_shape_clib "sokol_shape_windows_x64_gl_debug.lib" } else { foreign import sokol_shape_clib "sokol_shape_windows_x64_gl_release.lib" }
         } else {
-            when DEBUG { foreign import sokol_shape_clib { "sokol_shape_windows_x64_d3d11_debug.lib" } }
-            else       { foreign import sokol_shape_clib { "sokol_shape_windows_x64_d3d11_release.lib" } }
+            when DEBUG { foreign import sokol_shape_clib "sokol_shape_windows_x64_d3d11_debug.lib" } else { foreign import sokol_shape_clib "sokol_shape_windows_x64_d3d11_release.lib" }
         }
     }
 } else when ODIN_OS == .Darwin {
     when USE_DLL {
-             when  USE_GL && ODIN_ARCH == .arm64 &&  DEBUG { foreign import sokol_shape_clib { "../dylib/sokol_dylib_macos_arm64_gl_debug.dylib" } }
-        else when  USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_shape_clib { "../dylib/sokol_dylib_macos_arm64_gl_release.dylib" } }
-        else when  USE_GL && ODIN_ARCH == .amd64 &&  DEBUG { foreign import sokol_shape_clib { "../dylib/sokol_dylib_macos_x64_gl_debug.dylib" } }
-        else when  USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_shape_clib { "../dylib/sokol_dylib_macos_x64_gl_release.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .arm64 &&  DEBUG { foreign import sokol_shape_clib { "../dylib/sokol_dylib_macos_arm64_metal_debug.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_shape_clib { "../dylib/sokol_dylib_macos_arm64_metal_release.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .amd64 &&  DEBUG { foreign import sokol_shape_clib { "../dylib/sokol_dylib_macos_x64_metal_debug.dylib" } }
-        else when !USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_shape_clib { "../dylib/sokol_dylib_macos_x64_metal_release.dylib" } }
+        when USE_GL && ODIN_ARCH ==
+            .arm64 && DEBUG { foreign import sokol_shape_clib "../dylib/sokol_dylib_macos_arm64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_shape_clib "../dylib/sokol_dylib_macos_arm64_gl_release.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_shape_clib "../dylib/sokol_dylib_macos_x64_gl_debug.dylib" } else when USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_shape_clib "../dylib/sokol_dylib_macos_x64_gl_release.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && DEBUG { foreign import sokol_shape_clib "../dylib/sokol_dylib_macos_arm64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .arm64 && !DEBUG { foreign import sokol_shape_clib "../dylib/sokol_dylib_macos_arm64_metal_release.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && DEBUG { foreign import sokol_shape_clib "../dylib/sokol_dylib_macos_x64_metal_debug.dylib" } else when !USE_GL && ODIN_ARCH == .amd64 && !DEBUG { foreign import sokol_shape_clib "../dylib/sokol_dylib_macos_x64_metal_release.dylib" }
     } else {
         when USE_GL {
             when ODIN_ARCH == .arm64 {
-                when DEBUG { foreign import sokol_shape_clib { "sokol_shape_macos_arm64_gl_debug.a" } }
-                else       { foreign import sokol_shape_clib { "sokol_shape_macos_arm64_gl_release.a" } }
+                when DEBUG { foreign import sokol_shape_clib "sokol_shape_macos_arm64_gl_debug.a" } else { foreign import sokol_shape_clib "sokol_shape_macos_arm64_gl_release.a" }
             } else {
-                when DEBUG { foreign import sokol_shape_clib { "sokol_shape_macos_x64_gl_debug.a" } }
-                else       { foreign import sokol_shape_clib { "sokol_shape_macos_x64_gl_release.a" } }
+                when DEBUG { foreign import sokol_shape_clib "sokol_shape_macos_x64_gl_debug.a" } else { foreign import sokol_shape_clib "sokol_shape_macos_x64_gl_release.a" }
             }
         } else {
             when ODIN_ARCH == .arm64 {
-                when DEBUG { foreign import sokol_shape_clib { "sokol_shape_macos_arm64_metal_debug.a" } }
-                else       { foreign import sokol_shape_clib { "sokol_shape_macos_arm64_metal_release.a" } }
+                when DEBUG { foreign import sokol_shape_clib "sokol_shape_macos_arm64_metal_debug.a" } else { foreign import sokol_shape_clib "sokol_shape_macos_arm64_metal_release.a" }
             } else {
-                when DEBUG { foreign import sokol_shape_clib { "sokol_shape_macos_x64_metal_debug.a" } }
-                else       { foreign import sokol_shape_clib { "sokol_shape_macos_x64_metal_release.a" } }
+                when DEBUG { foreign import sokol_shape_clib "sokol_shape_macos_x64_metal_debug.a" } else { foreign import sokol_shape_clib "sokol_shape_macos_x64_metal_release.a" }
             }
         }
     }
 } else when ODIN_OS == .Linux {
     when USE_DLL {
-        when DEBUG { foreign import sokol_shape_clib { "sokol_shape_linux_x64_gl_debug.so" } }
-        else       { foreign import sokol_shape_clib { "sokol_shape_linux_x64_gl_release.so" } }
+        when DEBUG { foreign import sokol_shape_clib "sokol_shape_linux_x64_gl_debug.so" } else { foreign import sokol_shape_clib "sokol_shape_linux_x64_gl_release.so" }
     } else {
-        when DEBUG { foreign import sokol_shape_clib { "sokol_shape_linux_x64_gl_debug.a" } }
-        else       { foreign import sokol_shape_clib { "sokol_shape_linux_x64_gl_release.a" } }
+        when DEBUG { foreign import sokol_shape_clib "sokol_shape_linux_x64_gl_debug.a" } else { foreign import sokol_shape_clib "sokol_shape_linux_x64_gl_release.a" }
     }
 } else when ODIN_ARCH == .wasm32 || ODIN_ARCH == .wasm64p32 {
     // Feed sokol_shape_wasm_gl_debug.a or sokol_shape_wasm_gl_release.a into emscripten compiler.
-    foreign import sokol_shape_clib { "env.o" }
+    foreign import sokol_shape_clib "env.o"
 } else {
     #panic("This OS is currently not supported")
 }
 
-@(default_calling_convention="c", link_prefix="sshape_")
+@(default_calling_convention = "c", link_prefix = "sshape_")
 foreign sokol_shape_clib {
     // shape builder functions
     build_plane :: proc(#by_ptr buf: Buffer, #by_ptr params: Plane) -> Buffer ---
@@ -475,107 +459,106 @@ foreign sokol_shape_clib {
     an sshape_range struct.
 */
 Range :: struct {
-    ptr : rawptr,
-    size : c.size_t,
+    ptr:  rawptr,
+    size: c.size_t,
 }
 
 // a 4x4 matrix wrapper struct
 Mat4 :: struct {
-    m : [4][4]f32,
+    m: [4][4]f32,
 }
 
 // vertex layout of the generated geometry
 Vertex :: struct {
-    x : f32,
-    y : f32,
-    z : f32,
-    normal : u32,
-    u : u16,
-    v : u16,
-    color : u32,
+    x:      f32,
+    y:      f32,
+    z:      f32,
+    normal: u32,
+    u:      u16,
+    v:      u16,
+    color:  u32,
 }
 
 // a range of draw-elements (sg_draw(int base_element, int num_element, ...))
 Element_Range :: struct {
-    base_element : c.int,
-    num_elements : c.int,
+    base_element: c.int,
+    num_elements: c.int,
 }
 
 // number of elements and byte size of build actions
 Sizes_Item :: struct {
-    num : u32,
-    size : u32,
+    num:  u32,
+    size: u32,
 }
 
 Sizes :: struct {
-    vertices : Sizes_Item,
-    indices : Sizes_Item,
+    vertices: Sizes_Item,
+    indices:  Sizes_Item,
 }
 
 // in/out struct to keep track of mesh-build state
 Buffer_Item :: struct {
-    buffer : Range,
-    data_size : c.size_t,
-    shape_offset : c.size_t,
+    buffer:       Range,
+    data_size:    c.size_t,
+    shape_offset: c.size_t,
 }
 
 Buffer :: struct {
-    valid : bool,
-    vertices : Buffer_Item,
-    indices : Buffer_Item,
+    valid:    bool,
+    vertices: Buffer_Item,
+    indices:  Buffer_Item,
 }
 
 // creation parameters for the different shape types
 Plane :: struct {
-    width : f32,
-    depth : f32,
-    tiles : u16,
-    color : u32,
-    random_colors : bool,
-    merge : bool,
-    transform : Mat4,
+    width:         f32,
+    depth:         f32,
+    tiles:         u16,
+    color:         u32,
+    random_colors: bool,
+    merge:         bool,
+    transform:     Mat4,
 }
 
 Box :: struct {
-    width : f32,
-    height : f32,
-    depth : f32,
-    tiles : u16,
-    color : u32,
-    random_colors : bool,
-    merge : bool,
-    transform : Mat4,
+    width:         f32,
+    height:        f32,
+    depth:         f32,
+    tiles:         u16,
+    color:         u32,
+    random_colors: bool,
+    merge:         bool,
+    transform:     Mat4,
 }
 
 Sphere :: struct {
-    radius : f32,
-    slices : u16,
-    stacks : u16,
-    color : u32,
-    random_colors : bool,
-    merge : bool,
-    transform : Mat4,
+    radius:        f32,
+    slices:        u16,
+    stacks:        u16,
+    color:         u32,
+    random_colors: bool,
+    merge:         bool,
+    transform:     Mat4,
 }
 
 Cylinder :: struct {
-    radius : f32,
-    height : f32,
-    slices : u16,
-    stacks : u16,
-    color : u32,
-    random_colors : bool,
-    merge : bool,
-    transform : Mat4,
+    radius:        f32,
+    height:        f32,
+    slices:        u16,
+    stacks:        u16,
+    color:         u32,
+    random_colors: bool,
+    merge:         bool,
+    transform:     Mat4,
 }
 
 Torus :: struct {
-    radius : f32,
-    ring_radius : f32,
-    sides : u16,
-    rings : u16,
-    color : u32,
-    random_colors : bool,
-    merge : bool,
-    transform : Mat4,
+    radius:        f32,
+    ring_radius:   f32,
+    sides:         u16,
+    rings:         u16,
+    color:         u32,
+    random_colors: bool,
+    merge:         bool,
+    transform:     Mat4,
 }
-
